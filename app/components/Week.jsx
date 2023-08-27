@@ -1,20 +1,17 @@
-import { Box } from "@mui/material"
-import React from "react"
-import { daysOfWeek } from "../utils/dateHelpers"
+import { useState } from "react"
+import {
+   Box
+} from "@mui/material"
 import CalendarDay from "./CalendarDay"
 
-export default function Week({ week }) {
-   return (
-      <Box
-         display="flex"
-         id={`week ${week}`}
-         width="100%"
-         flexDirection="row"
-      >
-         {daysOfWeek &&
-            daysOfWeek.map((el, idx) => {
-               return <CalendarDay key={idx} />
-            })}
-      </Box>
-   )
+export default function Week({ week, dates }) {
+  return (
+    <Box display="flex">
+      {dates && week.map((date, idx) => {
+         return (
+            <CalendarDay key={idx} date={date}/>
+         )
+      })}
+    </Box>
+  )
 }

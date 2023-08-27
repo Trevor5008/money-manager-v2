@@ -1,13 +1,3 @@
-const daysOfWeek = [
-   "Sun",
-   "Mon",
-   "Tue",
-   "Wed",
-   "Thur",
-   "Fri",
-   "Sat"
-]
-
 const months = [
    "January",
    "February",
@@ -23,61 +13,65 @@ const months = [
    "December"
 ]
 
-function parseWeekDay(day) {
-   switch (day) {
-      case 0:
-         return "Sunday"
-      case 1:
-         return "Monday"
-      case 2:
-         return "Tuesday"
-      case 3:
-         return "Wednesday"
-      case 4:
-         return "Thursday"
-      case 5:
-         return "Friday"
-      case 6:
-         return "Saturday"
-      default:
-         return null
-   }
+const weekDays = [
+   "Sun",
+   "Mon",
+   "Tue",
+   "Wed",
+   "Thur",
+   "Fri",
+   "Sat"
+]
+
+function getCurrentDate() {
+   return new Date()
 }
 
-function parseDateSuffix(date) {
-   switch (date) {
-      case 1:
-      case 21:
-      case 31:
-         return "st"
-      case 2:
-      case 22:
-         return "nd"
-      case 3:
-      case 23:
-         return "rd"
-      default:
-         return "th"
-   }
+function getNumDays(month, year) {
+   const daysInMonth = new Date(year, month + 1, 0).getDate()
+   return daysInMonth
 }
 
-function populateDates(daysInMonth) {
-   const dates = []
-   for (let i = 1; i <= daysInMonth; i++) {
-      const date = {
-         date: i
+function getNumWeeks(month, year) {
+   const numDays = getNumDays(month, year)
+   const numWeeks = Math.ceil(numDays / 7)
+   return numWeeks
+}
+
+function findFirstDay(month, year) {
+   const firstDayIdx = new Date(year, month, 1).getDay()
+   return firstDayIdx
+}
+
+function generateMonthDates(month, year) {
+   const firstIdx = findFirstDay(month, year);
+   const numWeeks = getNumWeeks(month, year);
+   const numDays = getNumDays(month, year);
+   let dayCounter = 1;
+   const dates = [];
+
+   for (let i = 0; i < numWeeks; i++) {
+      const week = [];
+      for (let j = 0; j < 7; j++) {
+         if (i === 0 && j < firstIdx) {
+            week.push(0); // Days before the first day
+         } else if (dayCounter <= numDays) {
+            week.push(dayCounter);
+            dayCounter++;
+         } else {
+            week.push(0); // Days after the last day
+         }
       }
-      dates.push(date)
+      dates.push(week);
    }
-   return dates
+   return dates;
 }
 
-const parseMonth = (month) => months[month]
+
 
 module.exports = {
-   parseWeekDay,
-   parseDateSuffix,
-   parseMonth,
-   daysOfWeek,
-   populateDates
+   getCurrentDate,
+   generateMonthDates,
+   months,
+   weekDays
 }
