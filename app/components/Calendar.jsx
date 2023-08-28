@@ -7,7 +7,6 @@ import {
 } from "@mui/material"
 import {
    generateMonthDates,
-   getCurrentDate,
    months,
    weekDays
 } from "../utils/dateHelpers"
@@ -23,11 +22,11 @@ export default function Calendar() {
       useState(false)
 
    useEffect(() => {
-      const today = getCurrentDate()
+      const today = new Date()
       const monthIdx = today.getMonth()
       const year = today.getFullYear()
       const currentMonthDates =
-         generateMonthDates(monthIdx, year)
+         generateMonthDates(monthIdx, year, today)
       setCurrentMonth(months[monthIdx])
       setCurrentYear(year)
       setDates(currentMonthDates)
