@@ -3,7 +3,8 @@ import { useEffect, useState } from "react"
 import {
    Box,
    Divider,
-   Typography
+   Typography,
+   Paper
 } from "@mui/material"
 import {
    generateMonthDates,
@@ -34,60 +35,84 @@ export default function Calendar() {
    }, [])
 
    return (
-      <Box
-         display="flex"
-         flexDirection="column"
+      <Paper
+         elevation={3}
+         sx={{
+            width: "50vw",
+            height: "80vh",
+            paddingTop: 3,
+            paddingX: 3,
+            borderRadius: 5,
+            marginTop: "10vh",
+            marginLeft: 2
+         }}
       >
-         {/* Month/Year Heading */}
-         <Box>
-            <Typography
-               variant="h2"
-               textAlign="center"
-            >
-               {dataReady
-                  ? `${currentMonth} ${currentYear}`
-                  : "Loading..."}
-            </Typography>
-         </Box>
-         {/* Days of Week Header Row */}
+        {/* Whole Calendar */}
          <Box
             display="flex"
-            justifyContent="space-between"
-            marginBottom={1}
+            flexDirection="column"
+            height="100%"
+            width="100%"
          >
-            {weekDays &&
-               weekDays.map((day, idx) => {
-                  return (
-                     <Typography
-                        key={idx}
-                        variant="h5"
-                        flex={1}
-                        textAlign="center"
-                     >
-                        {day}
-                     </Typography>
-                  )
-               })}
+            {/* Month/Year Heading */}
+            <Box display="flex" justifyContent="center">
+               <Typography
+                  variant="h3"
+                  marginBottom={2}
+               >
+                  {dataReady
+                     ? `${currentMonth} ${currentYear}` 
+                     : "Loading..."}
+               </Typography>
+            </Box>
+            {/* Days of Week Header Row */}
+            <Box
+               display="flex"
+               justifyContent="space-between"
+               marginBottom={1}
+               width="100%"
+            >
+               {weekDays &&
+                  weekDays.map((day, idx) => {
+                     return (
+                        <Typography
+                           key={idx}
+                           variant="h5"
+                           flex={1}
+                           textAlign="center"
+                        >
+                           {day}
+                        </Typography>
+                     )
+                  })}
+            </Box>
+            {/* Divides Calendar header from body */}
+            <Divider
+               sx={{ border: "1px solid grey" }}
+            />
+            {/* Calendar Grid */}
+            <Box
+               display="flex"
+               flexDirection="column"
+               border={1}
+               width="100%"
+               height="100%"
+               marginBottom="3%"
+            >
+               {/* dates = matrix of week rows, day columns */}
+               {dates &&
+                  dates.map((week, idx) => {
+                     return (
+                        <Week
+                           week={week}
+                           key={idx}
+                           id={`week ${idx + 1}`}
+                           dates={dates}
+                        />
+                     )
+                  })}
+            </Box>
          </Box>
-         {/* Divides Calendar header from body */}
-         <Divider
-            sx={{ border: "1px solid grey" }}
-         />
-         {/* Calendar Grid */}
-         <Box display="flex" flexDirection="column">
-            {/* dates = matrix of week rows, day columns */}
-            {dates &&
-               dates.map((week, idx) => {
-                  return (
-                     <Week
-                        week={week}
-                        key={idx}
-                        id={`week ${idx + 1}`}
-                        dates={dates}
-                     />
-                  )
-               })}
-         </Box>
-      </Box>
+      </Paper>
    )
 }

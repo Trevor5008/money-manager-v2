@@ -100,7 +100,6 @@ function generateMonthDates(month, year, today) {
          }
       }
       dates.push(week)
-      console.log(dates)
    }
    return dates
 }

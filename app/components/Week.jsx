@@ -6,7 +6,7 @@ import CalendarDay from "./CalendarDay"
 
 export default function Week({ week, dates }) {
   return (
-    <Box display="flex">
+    <Box display="flex" width="100%" height="100%">
       {dates && week.map((date, idx) => {
          return (
             <CalendarDay key={idx} date={date}/>
