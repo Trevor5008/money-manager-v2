@@ -16,7 +16,7 @@ export default function page() {
       useState(0)
    const [dataReady, setDataReady] =
       useState(false)
-   const [activeDate, setActiveDate] = useState(null)
+   const [activeDate, setActiveDate] = useState(0)
 
    useEffect(() => {
       const today = new Date()
@@ -28,8 +28,17 @@ export default function page() {
       setCurrentYear(year)
       setDates(currentMonthDates)
       setDataReady(true)
-      setActiveDate(today)
+      setActiveDate(today.getDate())
    }, [])
+
+   useEffect(() => {
+      if (activeDate) console.log(activeDate)
+   }, [activeDate])
+
+   function handleDateSelect(evt) {
+      const date = evt.target?.querySelector('span').innerText
+      if (date) setActiveDate(date) 
+   }
 
    return (
       <main>
@@ -39,8 +48,9 @@ export default function page() {
                currentMonth={currentMonth}
                currentYear={currentYear}
                dataReady={dataReady}
+               handleSelect={handleDateSelect}
             />
-            <Notes activeDate={activeDate}/>
+            <Notes />
          </Box>
       </main>
    )

@@ -13,7 +13,8 @@ export default function Calendar({
    dates,
    currentMonth,
    currentYear,
-   dataReady
+   dataReady,
+   handleSelect
 }) {
    return (
       <Paper
@@ -92,6 +93,7 @@ export default function Calendar({
                            key={idx}
                            id={`week ${idx + 1}`}
                            dates={dates}
+                           handleSelect={handleSelect}
                         />
                      )
                   })}

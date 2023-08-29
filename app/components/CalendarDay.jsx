@@ -1,7 +1,10 @@
 import { Box, Typography } from "@mui/material"
 import { useState } from "react"
 
-export default function CalendarDay({ date }) {
+export default function CalendarDay({
+   date,
+   handleSelect
+}) {
    const [isViewed, setIsViewed] = useState(false)
    const isToday = date?.isToday
 
@@ -21,6 +24,7 @@ export default function CalendarDay({ date }) {
          onMouseEnter={handleHover}
          onMouseLeave={handleLeave}
          backgroundColor={isViewed && "lightgrey"}
+         onClick={handleSelect}
       >
          <Typography
             variant="p"
