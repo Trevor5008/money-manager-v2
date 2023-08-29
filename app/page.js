@@ -2,10 +2,11 @@
 import { useEffect, useState } from "react"
 import {
    generateMonthDates,
-   months,
-   weekDays
+   months
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
+import Notes from "./components/Notes"
+import { Box } from "@mui/material"
 
 export default function page() {
    const [dates, setDates] = useState([])
@@ -15,6 +16,7 @@ export default function page() {
       useState(0)
    const [dataReady, setDataReady] =
       useState(false)
+   const [activeDate, setActiveDate] = useState(null)
 
    useEffect(() => {
       const today = new Date()
@@ -26,16 +28,20 @@ export default function page() {
       setCurrentYear(year)
       setDates(currentMonthDates)
       setDataReady(true)
+      setActiveDate(today)
    }, [])
-   
+
    return (
       <main>
-         <Calendar
-            dates={dates}
-            currentMonth={currentMonth}
-            currentYear={currentYear}
-            dataReady={dataReady}
-         />
+         <Box sx={{ display: "flex" }}>
+            <Calendar
+               dates={dates}
+               currentMonth={currentMonth}
+               currentYear={currentYear}
+               dataReady={dataReady}
+            />
+            <Notes activeDate={activeDate}/>
+         </Box>
       </main>
    )
 }

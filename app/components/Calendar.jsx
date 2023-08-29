@@ -6,11 +6,7 @@ import {
    Typography,
    Paper
 } from "@mui/material"
-import {
-   generateMonthDates,
-   months,
-   weekDays
-} from "../utils/dateHelpers"
+import { weekDays } from "../utils/dateHelpers"
 import Week from "../components/Week"
 
 export default function Calendar({
@@ -19,7 +15,6 @@ export default function Calendar({
    currentYear,
    dataReady
 }) {
-   
    return (
       <Paper
          elevation={3}
@@ -29,11 +24,11 @@ export default function Calendar({
             paddingTop: 3,
             paddingX: 3,
             borderRadius: 5,
-            marginTop: "10vh",
+            marginTop: "5vh",
             marginLeft: 2
          }}
       >
-        {/* Whole Calendar */}
+         {/* Whole Calendar */}
          <Box
             display="flex"
             flexDirection="column"
@@ -41,13 +36,16 @@ export default function Calendar({
             width="100%"
          >
             {/* Month/Year Heading */}
-            <Box display="flex" justifyContent="center">
+            <Box
+               display="flex"
+               justifyContent="center"
+            >
                <Typography
                   variant="h3"
                   marginBottom={2}
                >
                   {dataReady
-                     ? `${currentMonth} ${currentYear}` 
+                     ? `${currentMonth} ${currentYear}`
                      : "Loading..."}
                </Typography>
             </Box>
