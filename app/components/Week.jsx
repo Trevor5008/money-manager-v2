@@ -5,7 +5,9 @@ import CalendarDay from "./CalendarDay"
 export default function Week({
    week,
    dates,
-   handleSelect
+   handleSelect,
+   activeDate,
+   reset
 }) {
    return (
       <Box
@@ -20,6 +22,8 @@ export default function Week({
                      key={idx}
                      date={date}
                      handleSelect={handleSelect}
+                     activeDate={activeDate}
+                     reset={reset}
                   />
                )
             })}

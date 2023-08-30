@@ -7,27 +7,38 @@ import {
    Divider,
    Stack
 } from "@mui/material"
-import { parseSuffix } from "../utils/dateHelpers"
+import {
+   parseSuffix,
+   weekDaysFull
+} from "../utils/dateHelpers"
 import NotesLoad from "./NotesLoad"
 
-export default function Notes({ activeDate }) {
-   const [current, setCurrent] = useState(0)
-   const [isToday, setIsToday] = useState(false)
+export default function Notes({
+   activeDate,
+   today
+}) {
    const [isReady, setIsReady] = useState(false)
-
+   const [heading, setHeading] = useState("")
+   
    useEffect(() => {
-      console.log(activeDate)
-      if (
-         activeDate ===
-         new Date().getDate()
-      ) {
-         setIsToday(true)
-      } else {
-         setIsToday(false)
+      if (activeDate && today) {
+         if (
+            activeDate?.getDate() ===
+            today?.getDate()
+         ) {
+            setHeading("Today")
+         } else {
+            const date = activeDate?.getDate()
+            let title =
+               weekDaysFull[activeDate?.getDay()]
+            title +=
+               " " + date + parseSuffix(date)
+            setHeading(title)
+         }
+         setIsReady(true)
       }
-      setCurrent(activeDate)
-      setIsReady(true)
-   }, [current])
+   }, [activeDate])
+
    return (
       <Paper
          elevation={3}
@@ -52,10 +63,7 @@ export default function Notes({ activeDate }) {
                      variant="h4"
                      paddingLeft={1}
                   >
-                     {isToday
-                        ? "Today"
-                        : current +
-                          parseSuffix(current)}
+                     {heading}
                   </Typography>
                </Box>
                <Divider />
@@ -72,7 +80,7 @@ export default function Notes({ activeDate }) {
                      marginX={2}
                   >
                      <Typography variant="h6">
-                        Expense(s)
+                        Expenses
                      </Typography>
                      <Divider />
                      <Stack
@@ -84,11 +92,8 @@ export default function Notes({ activeDate }) {
                            variant="body1"
                            fontStyle="italic"
                            color="grey"
-                           sx={{
-                              fontWeight: 100
-                           }}
                         >
-                           Zero items today
+                           No items today
                         </Typography>
                      </Stack>
                   </Stack>
@@ -111,7 +116,7 @@ export default function Notes({ activeDate }) {
                            fontStyle="italic"
                            color="grey"
                         >
-                           Zero items today
+                           No items today
                         </Typography>
                      </Stack>
                   </Stack>

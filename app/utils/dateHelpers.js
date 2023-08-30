@@ -23,6 +23,16 @@ const weekDays = [
    "Sat"
 ]
 
+const weekDaysFull = [
+   "Sunday",
+   "Monday",
+   "Tuesday",
+   "Wednesday",
+   "Thursday",
+   "Friday",
+   "Saturday"
+]
+
 function parseSuffix(date) {
    switch(date) {
       case 1:
@@ -78,8 +88,42 @@ function isCurrentToday(today, current) {
    return isToday
 }
 
-/* TODO: Dates s/b objects w/ a "date" integer value
-      ...
+/* TODO: 
+      dateObj = {
+         date: integer,
+         day: string,
+         month: integer idx,
+         year: integer,
+         isToday: boolean,
+         items: {
+            income: [
+               occurrenceObj,
+               occurrenceObj
+            ],
+            expenses: [
+               occurrenceObj,
+               occurrenceObj
+            ],
+            transfers: [],
+            debtPayments: []
+         }
+      }
+
+      transferOccurrenceObj = {
+         date: obj,
+         isRecurring: boolean,
+         accountFrom: integer idx,
+         accountTo: integer idx,
+         amount: decimal
+      }
+
+      occurrenceObj = {
+         date: date obj,
+         isRecurring: boolean,
+         account: integer idx,
+         amount: decimal,
+         category: string
+      }
 */
 function generateMonthDates(month, year, today) {
    const firstIdx = findFirstDay(month, year)
@@ -108,7 +152,12 @@ function generateMonthDates(month, year, today) {
                month,
                year,
                isToday,
-               items: []
+               items: {
+                  income: [],
+                  expenses: [],
+                  transfers: [],
+                  debtPayments: []
+               }
             }
             week.push(dateObj)
             dayCounter++
@@ -125,5 +174,6 @@ module.exports = {
    generateMonthDates,
    months,
    weekDays,
+   weekDaysFull,
    parseSuffix
 }

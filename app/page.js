@@ -9,14 +9,15 @@ import Notes from "./components/Notes"
 import { Box } from "@mui/material"
 
 export default function page() {
-   const [dates, setDates] = useState([])
+   const [dates, setDates] = useState([]) // array of date objects
+   const [today, setToday] = useState(null) // date object
    const [currentMonth, setCurrentMonth] =
-      useState(0)
+      useState(0) // month string name
    const [currentYear, setCurrentYear] =
-      useState(0)
+      useState(0) // year integer value ex. 2023
    const [dataReady, setDataReady] =
       useState(false)
-   const [activeDate, setActiveDate] = useState(0)
+   const [activeDate, setActiveDate] = useState(0) // date integer
 
    useEffect(() => {
       const today = new Date()
@@ -28,29 +29,44 @@ export default function page() {
       setCurrentYear(year)
       setDates(currentMonthDates)
       setDataReady(true)
-      setActiveDate(today.getDate())
+      setActiveDate(today)
+      setToday(today)
    }, [])
 
-   useEffect(() => {
-      if (activeDate) console.log(activeDate)
-   }, [activeDate])
+   function handleDateSelect(date) {
+      if (date) {
+         const monthIdx =
+            months.indexOf(currentMonth) // convert name to idx
+         const currentDate = new Date(
+            currentYear,
+            monthIdx,
+            date.date
+         )
+         setActiveDate(currentDate) // date object
+      }
+   }
 
-   function handleDateSelect(evt) {
-      const date = evt.target?.querySelector('span').innerText
-      if (date) setActiveDate(date) 
+   function resetActive() {
+      setActiveDate(today)
    }
 
    return (
       <main>
          <Box sx={{ display: "flex" }}>
             <Calendar
-               dates={dates}
+               dates={dates} // array of date objects
                currentMonth={currentMonth}
                currentYear={currentYear}
-               dataReady={dataReady}
+               dataReady={dataReady} // loaded boolen
                handleSelect={handleDateSelect}
+               today={today} // date object
+               activeDate={activeDate}
+               resetActive={resetActive}
             />
-            <Notes />
+            <Notes
+               activeDate={activeDate} // date object
+               today={today} // date object
+            />
          </Box>
       </main>
    )

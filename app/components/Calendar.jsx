@@ -14,8 +14,11 @@ export default function Calendar({
    currentMonth,
    currentYear,
    dataReady,
-   handleSelect
+   handleSelect,
+   activeDate,
+   resetActive
 }) {
+
    return (
       <Paper
          elevation={3}
@@ -94,6 +97,8 @@ export default function Calendar({
                            id={`week ${idx + 1}`}
                            dates={dates}
                            handleSelect={handleSelect}
+                           activeDate={activeDate}
+                           reset={resetActive}
                         />
                      )
                   })}
