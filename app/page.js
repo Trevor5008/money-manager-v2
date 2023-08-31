@@ -110,7 +110,7 @@ export default function page() {
                   ) : accountsView ? (
                      <Accounts />
                   ) : addItemsView ? (
-                     <AddItem />
+                     <AddItem activeDate={activeDate}/>
                   ): null}
                </Paper>
             </Stack>

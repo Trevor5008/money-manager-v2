@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
    Stack,
    Box,
@@ -9,14 +9,30 @@ import {
    InputLabel,
    Select,
    MenuItem,
-   Button
+   Button,
+   Input
 } from "@mui/material"
 
-export default function AddItem() {
+export default function AddItem({ activeDate }) {
    const [itemType, setItemType] = useState("")
+   const [dateString, setDateString] = useState("") 
+
+   useEffect(() => {
+      const year = activeDate.getFullYear()
+      let month = activeDate.getMonth()
+      let date = activeDate.getDate()
+
+      date = (date / 10) < 1 ? `0${date}` : `${date}`
+      month = (month / 10) < 1 ? `0${month}` : `${month}`
+
+      setDateString(`${year.toString()}-${month}-${date}`)
+   }, [activeDate])
 
    function handleChange(evt) {
       setItemType(evt.target.value)
+   }
+
+   function postItem(evt) {
    }
 
    return (
@@ -25,6 +41,7 @@ export default function AddItem() {
          paddingY={1}
          marginY={1}
       >
+         {/* Add Item Header */}
          <Box
             id="add-item-header"
             display="flex"
@@ -79,6 +96,12 @@ export default function AddItem() {
             </Box>
          </Box>
          <Divider />
+         {/* Add Item Form */}
+         <form onSubmit={postItem}>
+         <InputLabel htmlFor="date">Date: </InputLabel>
+         <Input id="date" type="date" value={dateString} />
+         <Button type="submit" variant="filled">Add</Button>
+         </form>
       </Stack>
    )
 }
