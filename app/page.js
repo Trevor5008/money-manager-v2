@@ -6,7 +6,10 @@ import {
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
 import Notes from "./components/Notes"
-import { Box } from "@mui/material"
+import CustomTabPanel from "./components/CustomTabPanel"
+import Accounts from "./components/Accounts"
+import AddItem from "./components/AddItem"
+import { Box, Paper, Stack } from "@mui/material"
 
 export default function page() {
    const [dates, setDates] = useState([]) // array of date objects
@@ -18,6 +21,12 @@ export default function page() {
    const [dataReady, setDataReady] =
       useState(false)
    const [activeDate, setActiveDate] = useState(0) // date integer
+   const [transactionsView, setTransactionsView] =
+      useState(true)
+   const [accountsView, setAcccountsView] =
+      useState(false)
+   const [addItemsView, setAddItemsView] =
+      useState(false)
 
    useEffect(() => {
       const today = new Date()
@@ -50,6 +59,22 @@ export default function page() {
       setActiveDate(today)
    }
 
+   function handleTabSelect(val) {
+      if (val === 0) {
+         setAcccountsView(false)
+         setTransactionsView(true)
+         setAddItemsView(false)
+      } else if (val === 1) {
+         setAcccountsView(true)
+         setTransactionsView(false)
+         setAddItemsView(false)
+      } else {
+         setAcccountsView(false)
+         setTransactionsView(false)
+         setAddItemsView(true)
+      }
+   }
+
    return (
       <main>
          <Box sx={{ display: "flex" }}>
@@ -63,10 +88,32 @@ export default function page() {
                activeDate={activeDate}
                resetActive={resetActive}
             />
-            <Notes
-               activeDate={activeDate} // date object
-               today={today} // date object
-            />
+            <Stack>
+               <CustomTabPanel
+                  handleSelect={handleTabSelect}
+               />
+               <Paper
+                  elevation={3}
+                  sx={{
+                     marginTop: "2vh",
+                     width: "40vw",
+                     marginLeft: 3,
+                     borderRadius: 3,
+                     height: "100%"
+                  }}
+               >
+                  {transactionsView ? (
+                     <Notes
+                        activeDate={activeDate} // date object
+                        today={today} // date object
+                     />
+                  ) : accountsView ? (
+                     <Accounts />
+                  ) : addItemsView ? (
+                     <AddItem />
+                  ): null}
+               </Paper>
+            </Stack>
          </Box>
       </main>
    )
