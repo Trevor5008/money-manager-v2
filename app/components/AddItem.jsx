@@ -10,13 +10,19 @@ import {
    Select,
    MenuItem,
    Button,
-   Input
+   Input,
+   Switch,
+   FormControlLabel
 } from "@mui/material"
 
-export default function AddItem({ activeDate, handleDatePick }) {
-   const [itemType, setItemType] = useState("")
+export default function AddItem({
+   activeDate,
+   handleDatePick
+}) {
+   const [itemType, setItemType] = useState("") // Expense, Income...
    const [dateString, setDateString] =
-      useState("")
+      useState("") // Used for input text
+   const [isRecurring, setIsRecurring] = useState(false) // Flag for add'l settings
 
    useEffect(() => {
       const year = activeDate?.year
@@ -38,6 +44,11 @@ export default function AddItem({ activeDate, handleDatePick }) {
    }
 
    function postItem(evt) {}
+
+   // TODO: Fix on/off binding
+   function handleSwitch(evt) {
+      console.log(evt.target.value)
+   }
 
    return (
       <Stack
@@ -111,22 +122,29 @@ export default function AddItem({ activeDate, handleDatePick }) {
                id="add-item-form"
                justifyContent="space-between"
             >
-               {/* Form Input rows */}
+               {/* Form Inputs */}
+               {/* Date Settings */}
                <Box
+                  id="add-item-date"
                   display="flex"
                   alignItems="center"
                   justifyContent="space-evenly"
                   flex={1}
                >
-                  <InputLabel htmlFor="date">
+                  <InputLabel htmlFor="item-date-input">
                      Date:{" "}
                   </InputLabel>
                   <Input
-                     id="date"
+                     id="item-date-input"
                      type="date"
                      value={dateString}
                      onChange={handleDatePick}
                   />
+                  <Stack direction="row" alignItems="center">
+                     <Typography marginRight={1}>One-time</Typography>
+                     <Switch onChange={handleSwitch}/>
+                     <Typography marginLeft={1}>Recurring</Typography>
+                  </Stack>
                </Box>
                {/* Form Submit */}
                <Box
