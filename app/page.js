@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react"
 import {
    generateMonthDates,
-   months
+   months,
+   convertDate
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
 import Notes from "./components/Notes"
@@ -29,29 +30,23 @@ export default function page() {
       useState(false)
 
    useEffect(() => {
-      const today = new Date()
-      const monthIdx = today.getMonth()
-      const year = today.getFullYear()
+      const today = new Date() // Date string
+      const monthIdx = today.getMonth() // Integer index
+      const year = today.getFullYear() // Integer year 
       const currentMonthDates =
-         generateMonthDates(monthIdx, year, today)
-      setCurrentMonth(months[monthIdx])
-      setCurrentYear(year)
-      setDates(currentMonthDates)
+         generateMonthDates(monthIdx, year, today) // array of custom date objects
+      const dateObj = convertDate(today, currentMonthDates)
+         setCurrentMonth(months[monthIdx]) // Month string
+      setCurrentYear(year) // Year integer
+      setDates(currentMonthDates) // array of custom date objects
       setDataReady(true)
-      setActiveDate(today)
-      setToday(today)
+      setActiveDate(dateObj) // Custom date object
+      setToday(dateObj) // Custom date object
    }, [])
 
    function handleDateSelect(date) {
       if (date) {
-         const monthIdx =
-            months.indexOf(currentMonth) // convert name to idx
-         const currentDate = new Date(
-            currentYear,
-            monthIdx,
-            date.date
-         )
-         setActiveDate(currentDate) // date object
+         setActiveDate(date)
       }
    }
 
@@ -75,6 +70,26 @@ export default function page() {
       }
    }
 
+   function handleDatePick(evt) {
+      const dateStrArr =
+         evt.target.value.split("-")
+      const month = parseInt(dateStrArr[1])
+      const year = parseInt(dateStrArr[0])
+      const date = parseInt(dateStrArr[2])
+
+      for (const week of dates) {
+         for (const dateObj of week) {
+            if (
+               dateObj?.date === date &&
+               dateObj?.month === month &&
+               dateObj?.year === year
+            ) {
+               setActiveDate(dateObj)
+            }
+         }
+      }
+   }
+
    return (
       <main>
          <Box sx={{ display: "flex" }}>
@@ -88,6 +103,7 @@ export default function page() {
                activeDate={activeDate}
                resetActive={resetActive}
             />
+            {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>
                <CustomTabPanel
                   handleSelect={handleTabSelect}
@@ -110,8 +126,13 @@ export default function page() {
                   ) : accountsView ? (
                      <Accounts />
                   ) : addItemsView ? (
-                     <AddItem activeDate={activeDate}/>
-                  ): null}
+                     <AddItem
+                        activeDate={activeDate}
+                        handleDatePick={
+                           handleDatePick
+                        }
+                     />
+                  ) : null}
                </Paper>
             </Stack>
          </Box>

@@ -13,27 +13,31 @@ import {
    Input
 } from "@mui/material"
 
-export default function AddItem({ activeDate }) {
+export default function AddItem({ activeDate, handleDatePick }) {
    const [itemType, setItemType] = useState("")
-   const [dateString, setDateString] = useState("") 
+   const [dateString, setDateString] =
+      useState("")
 
    useEffect(() => {
-      const year = activeDate.getFullYear()
-      let month = activeDate.getMonth()
-      let date = activeDate.getDate()
+      const year = activeDate?.year
+      let month = activeDate?.month
+      let date = activeDate?.date
 
-      date = (date / 10) < 1 ? `0${date}` : `${date}`
-      month = (month / 10) < 1 ? `0${month}` : `${month}`
+      date =
+         date / 10 < 1 ? `0${date}` : `${date}`
+      month =
+         month / 10 < 1 ? `0${month}` : `${month}`
 
-      setDateString(`${year.toString()}-${month}-${date}`)
+      setDateString(
+         `${year.toString()}-${month}-${date}`
+      )
    }, [activeDate])
 
    function handleChange(evt) {
       setItemType(evt.target.value)
    }
 
-   function postItem(evt) {
-   }
+   function postItem(evt) {}
 
    return (
       <Stack
@@ -89,18 +93,55 @@ export default function AddItem({ activeDate }) {
                   </Select>
                </FormControl>
             </Box>
-            <Box flex={1} display="flex" justifyContent="flex-end" paddingRight={1}>
+            <Box
+               flex={1}
+               display="flex"
+               justifyContent="flex-end"
+               paddingRight={1}
+            >
                <Button variant="standard">
-                  Cancel
+                  Clear
                </Button>
             </Box>
          </Box>
          <Divider />
          {/* Add Item Form */}
          <form onSubmit={postItem}>
-         <InputLabel htmlFor="date">Date: </InputLabel>
-         <Input id="date" type="date" value={dateString} />
-         <Button type="submit" variant="filled">Add</Button>
+            <Stack
+               id="add-item-form"
+               justifyContent="space-between"
+            >
+               {/* Form Input rows */}
+               <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-evenly"
+                  flex={1}
+               >
+                  <InputLabel htmlFor="date">
+                     Date:{" "}
+                  </InputLabel>
+                  <Input
+                     id="date"
+                     type="date"
+                     value={dateString}
+                     onChange={handleDatePick}
+                  />
+               </Box>
+               {/* Form Submit */}
+               <Box
+                  flex={1}
+                  display="flex"
+                  justifyContent="center"
+               >
+                  <Button
+                     type="submit"
+                     variant="filled"
+                  >
+                     Add
+                  </Button>
+               </Box>
+            </Stack>
          </form>
       </Stack>
    )

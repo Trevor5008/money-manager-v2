@@ -34,7 +34,7 @@ const weekDaysFull = [
 ]
 
 function parseSuffix(date) {
-   switch(date) {
+   switch (date) {
       case 1:
       case 21:
       case 31:
@@ -83,8 +83,10 @@ function isCurrentToday(today, current) {
    const todayMonth = today.getMonth()
    const todayYear = today.getFullYear()
 
-   const isToday = currentDate === todayDate 
-      && currentMonth === todayMonth && currentYear === todayYear
+   const isToday =
+      currentDate === todayDate &&
+      currentMonth === todayMonth &&
+      currentYear === todayYear
    return isToday
 }
 
@@ -125,6 +127,38 @@ function isCurrentToday(today, current) {
          category: string
       }
 */
+
+// Translates short week day into long name
+function getLongName(day) {
+   return weekDaysFull.find(
+      (weekDay) =>
+         weekDay.slice(0, 2) === day.slice(0, 2)
+   )
+}
+
+// Converts standard date string to custom date object
+function convertDate(dateStr, dates) {
+   const year = dateStr.getFullYear()
+   const month = dateStr.getMonth()
+   const date = dateStr.getDate()
+   let dateObj
+   // loop over rows in dates matrix
+   for (const week of dates) {
+      // date object is w/in a week row
+      week.forEach((obj) => {
+         if (
+            obj?.year === year &&
+            obj?.month === month &&
+            obj?.date === date
+         ) {
+            dateObj = obj
+            return
+         }
+      })
+   }
+   return dateObj
+}
+
 function generateMonthDates(month, year, today) {
    const firstIdx = findFirstDay(month, year)
    const numWeeks = getNumWeeks(month, year)
@@ -138,9 +172,15 @@ function generateMonthDates(month, year, today) {
          if (i === 0 && j < firstIdx) {
             week.push(null) // Days before the first day
          } else if (dayCounter <= numDays) {
-            const current = new Date(year, month, dayCounter)
-            const isToday = 
-               isCurrentToday(today, current)
+            const current = new Date(
+               year,
+               month,
+               dayCounter
+            )
+            const isToday = isCurrentToday(
+               today,
+               current
+            )
             const date = new Date(
                year,
                month,
@@ -175,5 +215,7 @@ module.exports = {
    months,
    weekDays,
    weekDaysFull,
-   parseSuffix
+   parseSuffix,
+   convertDate,
+   getLongName
 }

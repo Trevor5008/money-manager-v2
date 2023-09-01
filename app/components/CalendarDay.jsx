@@ -9,9 +9,9 @@ export default function CalendarDay({
 }) {
    const [isViewed, setIsViewed] = useState(false)
    const isToday = date?.isToday
-   const isActive = date?.date === activeDate?.getDate() 
-      && date?.month === activeDate?.getMonth()
-      && date?.year === activeDate?.getFullYear()
+   const isActive = date?.date === activeDate?.date
+      && date?.month === activeDate?.month
+      && date?.year === activeDate?.year
 
    function handleHover() {
       setIsViewed(true)
