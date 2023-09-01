@@ -40,6 +40,7 @@ export default function Notes({
       <Stack
          id="notes"
          paddingTop={1}
+         flex={1}
       >
          {/* Notes Header */}
          <Box

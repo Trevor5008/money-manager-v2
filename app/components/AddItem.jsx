@@ -11,8 +11,7 @@ import {
    MenuItem,
    Button,
    Input,
-   Switch,
-   FormControlLabel
+   Switch
 } from "@mui/material"
 
 export default function AddItem({
@@ -22,7 +21,8 @@ export default function AddItem({
    const [itemType, setItemType] = useState("") // Expense, Income...
    const [dateString, setDateString] =
       useState("") // Used for input text
-   const [isRecurring, setIsRecurring] = useState(false) // Flag for add'l settings
+   const [isRecurring, setIsRecurring] =
+      useState(false) // Flag for add'l settings
 
    useEffect(() => {
       const year = activeDate?.year
@@ -43,11 +43,15 @@ export default function AddItem({
       setItemType(evt.target.value)
    }
 
-   function postItem(evt) {}
+   function postItem(evt) {
+      evt.preventDefault()
+      console.log("form submitted...")
+   }
 
    // TODO: Fix on/off binding
    function handleSwitch(evt) {
-      console.log(evt.target.value)
+      const selection = evt.target.checked
+      setIsRecurring(selection)
    }
 
    return (
@@ -55,6 +59,7 @@ export default function AddItem({
          id="add-item"
          paddingY={1}
          marginY={1}
+         flex={1}
       >
          {/* Add Item Header */}
          <Box
@@ -64,6 +69,7 @@ export default function AddItem({
                marginBottom: 2,
                marginLeft: 2
             }}
+            justifyContent="space-evenly"
          >
             <Box
                display="flex"
@@ -117,19 +123,30 @@ export default function AddItem({
          </Box>
          <Divider />
          {/* Add Item Form */}
-         <form onSubmit={postItem}>
-            <Stack
-               id="add-item-form"
+         <form
+            onSubmit={postItem}
+            style={{
+               display: "flex",
+               flexDirection: "column",
+               justifyContent: "space-between",
+               flex: 1
+            }}
+         >
+            {/* Date Settings */}
+            <Box
+               id="add-item-date"
+               display="flex"
+               alignItems="flex-start"
                justifyContent="space-between"
+               flex={1}
+               marginTop={1}
             >
-               {/* Form Inputs */}
-               {/* Date Settings */}
-               <Box
-                  id="add-item-date"
-                  display="flex"
-                  alignItems="center"
+               {/* Date Input Section */}
+               <Stack
+                  direction="row"
                   justifyContent="space-evenly"
                   flex={1}
+                  alignItems="center"
                >
                   <InputLabel htmlFor="item-date-input">
                      Date:{" "}
@@ -140,26 +157,38 @@ export default function AddItem({
                      value={dateString}
                      onChange={handleDatePick}
                   />
-                  <Stack direction="row" alignItems="center">
-                     <Typography marginRight={1}>One-time</Typography>
-                     <Switch onChange={handleSwitch}/>
-                     <Typography marginLeft={1}>Recurring</Typography>
-                  </Stack>
-               </Box>
-               {/* Form Submit */}
-               <Box
+               </Stack>
+               {/* Recurrence Toggle */}
+               <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-evenly"
                   flex={1}
-                  display="flex"
-                  justifyContent="center"
                >
-                  <Button
-                     type="submit"
-                     variant="filled"
-                  >
-                     Add
-                  </Button>
-               </Box>
-            </Stack>
+                  <Typography marginRight={1}>
+                     {isRecurring
+                        ? "Recurring"
+                        : "One-time"}
+                  </Typography>
+                  <Switch
+                     onChange={handleSwitch}
+                  />
+               </Stack>
+            </Box>
+            {/* Form Submit */}
+            <Box
+               display="flex"
+               justifyContent="center"
+               alignItems="flex-end"
+               flex={.3}
+            >
+               <Button
+                  type="submit"
+                  variant="filled"
+               >
+                  Add
+               </Button>
+            </Box>
          </form>
       </Stack>
    )

@@ -31,6 +31,9 @@ export default function CalendarDay({
          backgroundColor={isViewed && "lightgrey"}
          onClick={() => handleSelect(date)}
          onDoubleClick={reset}
+         sx={{
+            cursor: "pointer"
+         }}
       >
          <Typography
             variant="p"

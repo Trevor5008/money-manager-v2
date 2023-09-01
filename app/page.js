@@ -115,7 +115,8 @@ export default function page() {
                      width: "40vw",
                      marginLeft: 3,
                      borderRadius: 3,
-                     height: "100%"
+                     display: "flex",
+                     flex: 1
                   }}
                >
                   {transactionsView ? (
