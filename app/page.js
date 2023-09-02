@@ -70,6 +70,7 @@ export default function page() {
       }
    }
 
+   // TODO: Fix single month issue
    function handleDatePick(evt) {
       const dateStrArr =
          evt.target.value.split("-")

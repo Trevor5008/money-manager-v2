@@ -23,6 +23,8 @@ export default function AddItem({
       useState("") // Used for input text
    const [isRecurring, setIsRecurring] =
       useState(false) // Flag for add'l settings
+   const [periodicity, setPeriodicity] =
+      useState("")
 
    useEffect(() => {
       const year = activeDate?.year
@@ -41,6 +43,10 @@ export default function AddItem({
 
    function handleChange(evt) {
       setItemType(evt.target.value)
+   }
+
+   function changePeriodicity(evt) {
+      console.log(evt.target.value)
    }
 
    function postItem(evt) {
@@ -71,6 +77,7 @@ export default function AddItem({
             }}
             justifyContent="space-evenly"
          >
+            {/* Category Select */}
             <Box
                display="flex"
                flex={1}
@@ -110,6 +117,7 @@ export default function AddItem({
                   </Select>
                </FormControl>
             </Box>
+            {/* Clear Button */}
             <Box
                flex={1}
                display="flex"
@@ -138,8 +146,9 @@ export default function AddItem({
                display="flex"
                alignItems="flex-start"
                justifyContent="space-between"
-               flex={1}
+               maxHeight="10%"
                marginTop={1}
+               border={1}
             >
                {/* Date Input Section */}
                <Stack
@@ -175,12 +184,77 @@ export default function AddItem({
                   />
                </Stack>
             </Box>
+            {/* Conditional Recurrence Details */}
+            {/* TODO: Figure out how to disable non-relative re-occurrence dates */}
+            {isRecurring && (
+               <Stack border={1} maxHeight="20%">
+                  {/* Periodicity Select */}
+                  <Stack direction="row" justifyContent="space-evenly">
+                     <InputLabel
+                        sx={{
+                           flex: 1,
+                           marginLeft: 2
+                        }}
+                        htmlFor="periodicity-select"
+                     >
+                        Occurs:{" "}
+                     </InputLabel>
+                     <Select
+                        id="periodicity-select"
+                        value={""}
+                        label="Occurs: "
+                        onChange={
+                           changePeriodicity
+                        }
+                        variant="standard"
+                        sx={{
+                           paddingLeft: 1,
+                           flex: 1
+                        }}
+                     >
+                        <MenuItem value="daily">
+                           Daily
+                        </MenuItem>
+                        <MenuItem value="weekly">
+                           Weekly
+                        </MenuItem>
+                        <MenuItem value="monthly">
+                           Monthly
+                        </MenuItem>
+                        <MenuItem value="yearly">
+                           Yearly
+                        </MenuItem>
+                        <MenuItem value="custom">
+                           Custom
+                        </MenuItem>
+                     </Select>
+                  </Stack>
+                  {/* End Date Select */}
+                  <Stack
+                     direction="row"
+                     flex={1}
+                     alignItems="center"
+                     justifyContent="space-evenly"
+                  >
+                     <InputLabel htmlFor="item-end-date-input">
+                        End Date:{" "}
+                     </InputLabel>
+                     <Input
+                        id="item-end-date-input"
+                        type="date"
+                        value={dateString}
+                        onChange={handleDatePick}
+                     />
+                  </Stack>
+               </Stack>
+            )}
             {/* Form Submit */}
             <Box
                display="flex"
                justifyContent="center"
-               alignItems="flex-end"
-               flex={.3}
+               alignItems="center"
+               maxHeight="10%"
+               border={1}
             >
                <Button
                   type="submit"
