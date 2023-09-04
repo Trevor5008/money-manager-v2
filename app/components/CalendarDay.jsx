@@ -9,9 +9,10 @@ export default function CalendarDay({
 }) {
    const [isViewed, setIsViewed] = useState(false)
    const isToday = date?.isToday
-   const isActive = date?.date === activeDate?.date
-      && date?.month === activeDate?.month
-      && date?.year === activeDate?.year
+   const isActive =
+      date?.date === activeDate?.date &&
+      date?.month === activeDate?.month &&
+      date?.year === activeDate?.year
 
    function handleHover() {
       setIsViewed(true)
@@ -20,8 +21,9 @@ export default function CalendarDay({
       setIsViewed(false)
    }
    return (
+      // Calendar Date Box
       <Box
-         border={(isViewed && date) ? 1 : 0.5}
+         border={isViewed && date ? 1 : 0.5}
          flex={1}
          height="100%"
          display="flex"
@@ -38,26 +40,42 @@ export default function CalendarDay({
          <Typography
             variant="p"
             alignSelf="flex-end"
-            marginRight={(isToday || isActive) ? 0.25 : 1}
-            marginTop={(isToday || isActive) ? 0.25 : 1}
+            marginRight={
+               isToday || isActive ? 0.25 : 1
+            }
+            marginTop={
+               isToday || isActive ? 0.25 : 1
+            }
             fontStyle="italic"
             color={
-               (isToday || isViewed || isActive)
+               isToday || isViewed || isActive
                   ? "whitesmoke"
                   : "black"
             }
             fontWeight={
-               (isToday || isViewed || isActive) ? "bold" : 500
+               isToday || isViewed || isActive
+                  ? "bold"
+                  : 500
             }
-            border={(isToday || isActive) && "0px solid grey"}
-            borderRadius={(isToday || isActive) && 5}
+            border={
+               (isToday || isActive) &&
+               "0px solid grey"
+            }
+            borderRadius={
+               (isToday || isActive) && 5
+            }
             padding={(isToday || isActive) && 1}
             sx={{
                textShadow:
-                  (isToday || isViewed || isActive) &&
+                  (isToday ||
+                     isViewed ||
+                     isActive) &&
                   "grey -2px 3px",
-               backgroundColor:
-                  isToday ? "darksalmon" : isActive ? "lightblue" : ""
+               backgroundColor: isToday
+                  ? "darksalmon"
+                  : isActive
+                  ? "lightblue"
+                  : ""
             }}
          >
             {date?.date}
