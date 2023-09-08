@@ -21,6 +21,7 @@ export default function AddItem({
    handleDatePick
 }) {
    const [itemType, setItemType] = useState("") // Expense, Income...
+   const [isCleared, setIsCleared] = useState(false) // flag for resetting form
    const [dateString, setDateString] =
       useState("") // Used for input text
    const [isRecurring, setIsRecurring] =
@@ -28,6 +29,8 @@ export default function AddItem({
    const [periodicity, setPeriodicity] =
       useState("")
    const [account, setAccount] = useState("")
+   const [category, setCategory] = useState("")
+   const [itemAmount, setItemAmount] = useState("")
 
    useEffect(() => {
       const year = activeDate?.year
@@ -42,9 +45,9 @@ export default function AddItem({
       setDateString(
          `${year.toString()}-${month}-${date}`
       )
-   }, [activeDate])
+   }, [activeDate, isCleared])
 
-   function handleChange(evt) {
+   function handleTypeChange(evt) {
       setItemType(evt.target.value)
    }
 
@@ -66,6 +69,24 @@ export default function AddItem({
    function accountSelect(evt) {
       const accountSelected = evt.target.value
       setAccount(accountSelected)
+   }
+
+   function categorySelect(evt) {
+      const categorySelected = evt.target.value
+      setCategory(categorySelected)
+   }
+   
+   function handleAmountChange(evt) {
+      const amount = evt.target.value
+      setItemAmount(amount)
+   }
+
+   function clearItemFlds() {
+      setItemType("")
+      setIsRecurring(false)
+      setAccount("")
+      setCategory("")
+      setItemAmount('')
    }
 
    return (
@@ -107,7 +128,7 @@ export default function AddItem({
                      id="demo-simple-select"
                      value={itemType}
                      label="Type"
-                     onChange={handleChange}
+                     onChange={handleTypeChange}
                      variant="standard"
                      sx={{
                         paddingLeft: 1
@@ -132,7 +153,7 @@ export default function AddItem({
                justifyContent="flex-end"
                paddingRight={1}
             >
-               <Button variant="standard">
+               <Button variant="standard" onClick={clearItemFlds}>
                   Clear
                </Button>
             </Box>
@@ -265,11 +286,12 @@ export default function AddItem({
                      </Stack>
                   </Stack>
                )}
-               {/* Account */}
+               {/* Account Select*/}
                <Box
                   display="flex"
                   flex={1}
-                  paddingLeft={1}
+                  paddingX={1}
+                  marginY={1}
                >
                   <InputLabel
                      sx={{
@@ -320,12 +342,67 @@ export default function AddItem({
                      </Select>
                   </FormControl>
                </Box>
+               {/* Category Select */}
+               <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  paddingX={1}
+                  marginY={1}
+               >
+                  <InputLabel
+                     sx={{
+                        alignSelf: "center",
+                        flex: 1
+                     }}
+                  >
+                     Category:{" "}
+                  </InputLabel>
+                  <FormControl
+                     sx={{
+                        marginLeft: 1,
+                        flex: 1
+                     }}
+                  >
+                     <Select
+                        id="category-select"
+                        value={category}
+                        label="Category"
+                        onChange={categorySelect}
+                        variant="standard"
+                        sx={{
+                           paddingX: 1
+                        }}
+                     >
+                        <ListSubheader>
+                           Food
+                        </ListSubheader>
+                        <MenuItem value="food-groceries">
+                           Groceries
+                        </MenuItem>
+                        <MenuItem value="food-dining">
+                           Dining
+                        </MenuItem>
+                        <ListSubheader>
+                           Car
+                        </ListSubheader>
+                        <MenuItem value="car-gas">
+                           Gas
+                        </MenuItem>
+                        <MenuItem value="car-maintenance">
+                           Maintenance
+                        </MenuItem>
+                        <MenuItem value="car-repairs">
+                           Repairs
+                        </MenuItem>
+                     </Select>
+                  </FormControl>
+               </Box>
                {/* Amount */}
-               {/* TODO: Add Structure for Amount Input */}
                <Box
                   display="flex"
                   flex={1}
-                  paddingLeft={1}
+                  paddingX={1}
+                  marginY={1}
                   justifyContent="space-between"
                >
                   <InputLabel htmlFor="amount-input-fld">
@@ -334,8 +411,14 @@ export default function AddItem({
                   <Input
                      id="amount-input-fld"
                      type="number"
+                     value={itemAmount}
                      inputProps={{ min: 0 }}
-                     startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                     onChange={handleAmountChange}
+                     startAdornment={
+                        <InputAdornment position="start">
+                           $
+                        </InputAdornment>
+                     }
                   />
                </Box>
             </Stack>
