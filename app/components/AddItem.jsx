@@ -12,7 +12,8 @@ import {
    Button,
    Input,
    Switch,
-   ListSubheader
+   ListSubheader,
+   InputAdornment
 } from "@mui/material"
 
 export default function AddItem({
@@ -264,8 +265,7 @@ export default function AddItem({
                      </Stack>
                   </Stack>
                )}
-               {/* Account, Amount, Category, Subcategory */}
-               {/* Type Select */}
+               {/* Account */}
                <Box
                   display="flex"
                   flex={1}
@@ -319,6 +319,24 @@ export default function AddItem({
                         </MenuItem>
                      </Select>
                   </FormControl>
+               </Box>
+               {/* Amount */}
+               {/* TODO: Add Structure for Amount Input */}
+               <Box
+                  display="flex"
+                  flex={1}
+                  paddingLeft={1}
+                  justifyContent="space-between"
+               >
+                  <InputLabel htmlFor="amount-input-fld">
+                     Amount:{" "}
+                  </InputLabel>
+                  <Input
+                     id="amount-input-fld"
+                     type="number"
+                     inputProps={{ min: 0 }}
+                     startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                  />
                </Box>
             </Stack>
             {/* Form Submit */}
