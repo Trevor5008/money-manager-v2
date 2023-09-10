@@ -21,7 +21,6 @@ export default function AddItem({
    handleDatePick
 }) {
    const [itemType, setItemType] = useState("") // Expense, Income...
-   const [isCleared, setIsCleared] = useState(false) // flag for resetting form
    const [dateString, setDateString] =
       useState("") // Used for input text
    const [isRecurring, setIsRecurring] =
@@ -30,7 +29,8 @@ export default function AddItem({
       useState("")
    const [account, setAccount] = useState("")
    const [category, setCategory] = useState("")
-   const [itemAmount, setItemAmount] = useState("")
+   const [itemAmount, setItemAmount] =
+      useState(0.00)
 
    useEffect(() => {
       const year = activeDate?.year
@@ -45,23 +45,19 @@ export default function AddItem({
       setDateString(
          `${year.toString()}-${month}-${date}`
       )
-   }, [activeDate, isCleared])
+   }, [activeDate])
 
+   // Expense/Income/Transfer
    function handleTypeChange(evt) {
       setItemType(evt.target.value)
    }
 
+   // TODO: Need to hook up
    function changePeriodicity(evt) {
       console.log(evt.target.value)
    }
 
-   function postItem(evt) {
-      evt.preventDefault()
-      console.log("form submitted...")
-   }
-
-   // TODO: Fix on/off binding
-   function handleSwitch(evt) {
+   function handleRecurrence(evt) {
       const selection = evt.target.checked
       setIsRecurring(selection)
    }
@@ -75,10 +71,11 @@ export default function AddItem({
       const categorySelected = evt.target.value
       setCategory(categorySelected)
    }
-   
+
    function handleAmountChange(evt) {
-      const amount = evt.target.value
-      setItemAmount(amount)
+      const inputValue = evt.target.value
+
+      setItemAmount(inputValue)
    }
 
    function clearItemFlds() {
@@ -86,7 +83,32 @@ export default function AddItem({
       setIsRecurring(false)
       setAccount("")
       setCategory("")
-      setItemAmount('')
+      setItemAmount("")
+   }
+
+   /* 
+      Form should submit occurrence object:
+
+         occurrenceObj = {
+            date: date obj,
+            isRecurring: boolean,
+            account: integer idx,
+            amount: decimal,
+            category: string
+         }
+
+   */
+   function postItem(evt) {
+      evt.preventDefault()
+
+      const itemObj = {
+         date: activeDate,
+         isRecurring,
+         account,
+         amount: parseFloat(itemAmount),
+         category
+      }
+      console.log(itemObj, typeof parseFloat(itemAmount))
    }
 
    return (
@@ -153,7 +175,10 @@ export default function AddItem({
                justifyContent="flex-end"
                paddingRight={1}
             >
-               <Button variant="standard" onClick={clearItemFlds}>
+               <Button
+                  variant="standard"
+                  onClick={clearItemFlds}
+               >
                   Clear
                </Button>
             </Box>
@@ -210,7 +235,10 @@ export default function AddItem({
                            : "One-time"}
                      </Typography>
                      <Switch
-                        onChange={handleSwitch}
+                        onChange={
+                           handleRecurrence
+                        }
+                        checked={isRecurring}
                      />
                   </Stack>
                </Box>
@@ -412,7 +440,7 @@ export default function AddItem({
                      id="amount-input-fld"
                      type="number"
                      value={itemAmount}
-                     inputProps={{ min: 0 }}
+                     inputProps={{ min: 0.00, step: 0.01 }}
                      onChange={handleAmountChange}
                      startAdornment={
                         <InputAdornment position="start">
@@ -429,11 +457,12 @@ export default function AddItem({
                   justifyContent="center"
                   alignItems="center"
                >
+                  {/* Conditionally render item type */}
                   <Button
                      type="submit"
                      variant="filled"
                   >
-                     Add
+                     Add {itemType}
                   </Button>
                </Box>
             </Stack>
