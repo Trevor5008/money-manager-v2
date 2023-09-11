@@ -8,7 +8,7 @@ import {
 } from "@mui/material"
 import {
    parseSuffix,
-   weekDaysFull
+   getLongName
 } from "../utils/dateHelpers"
 
 export default function Notes({
@@ -21,14 +21,13 @@ export default function Notes({
    useEffect(() => {
       if (activeDate && today) {
          if (
-            activeDate?.getDate() ===
-            today?.getDate()
+            activeDate?.date ===
+            today?.date
          ) {
             setHeading("Today")
          } else {
-            const date = activeDate?.getDate()
-            let title =
-               weekDaysFull[activeDate?.getDay()]
+            const date = activeDate?.date
+            let title = getLongName(activeDate?.day)
             title +=
                " " + date + parseSuffix(date)
             setHeading(title)
@@ -41,6 +40,7 @@ export default function Notes({
       <Stack
          id="notes"
          paddingTop={1}
+         flex={1}
       >
          {/* Notes Header */}
          <Box

@@ -1,5 +1,3 @@
-"use client"
-import { useEffect, useState } from "react"
 import {
    Stack,
    Divider,
@@ -12,6 +10,7 @@ export default function Accounts() {
       <Stack
          id="accounts"
          paddingTop={1}
+         flex={1}
       >
          {/* Accounts Header */}
          <Box
