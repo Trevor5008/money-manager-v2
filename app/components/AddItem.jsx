@@ -105,10 +105,10 @@ export default function AddItem({
          date: activeDate,
          isRecurring,
          account,
-         amount: parseFloat(itemAmount),
+         amount: itemAmount,
          category
       }
-      console.log(itemObj, typeof parseFloat(itemAmount))
+      console.log(itemObj)
    }
 
    return (
