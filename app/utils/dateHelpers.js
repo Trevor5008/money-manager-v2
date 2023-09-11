@@ -90,44 +90,6 @@ function isCurrentToday(today, current) {
    return isToday
 }
 
-/* TODO: 
-      dateObj = {
-         date: integer,
-         day: string,
-         month: integer idx,
-         year: integer,
-         isToday: boolean,
-         items: {
-            income: [
-               occurrenceObj,
-               occurrenceObj
-            ],
-            expenses: [
-               occurrenceObj,
-               occurrenceObj
-            ],
-            transfers: [],
-            debtPayments: []
-         }
-      }
-
-      transferOccurrenceObj = {
-         date: obj,
-         isRecurring: boolean,
-         accountFrom: integer idx,
-         accountTo: integer idx,
-         amount: decimal
-      }
-
-      occurrenceObj = {
-         date: date obj,
-         isRecurring: boolean,
-         account: integer idx,
-         amount: decimal,
-         category: string
-      }
-*/
-
 // Translates short week day into long name
 function getLongName(day) {
    return weekDaysFull.find(

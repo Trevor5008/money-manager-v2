@@ -75,7 +75,7 @@ export default function AddItem({
    function handleAmountChange(evt) {
       const inputValue = evt.target.value
 
-      setItemAmount(inputValue)
+      setItemAmount(typeof inputValue)
    }
 
    function clearItemFlds() {
