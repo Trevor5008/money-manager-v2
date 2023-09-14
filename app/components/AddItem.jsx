@@ -73,10 +73,11 @@ export default function AddItem({
    }
 
    function handleAmountChange(evt) {
-      const inputValue = evt.target.value
-
-      setItemAmount(typeof inputValue)
+      const inputValue = parseFloat(evt.target.value)
+      setItemAmount(inputValue)
    }
+
+   function showSubCategories()
 
    function clearItemFlds() {
       setItemType("")
@@ -401,6 +402,25 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
+                        <ListSubheader onMouseOver={showSubCategories}>
+                           Home
+                        </ListSubheader>
+                        {showSubs && (
+                           <Box>
+                              <MenuItem value="home-rent">
+                           Rent
+                        </MenuItem>
+                        <MenuItem value="home-goods">
+                           Goods
+                        </MenuItem>
+                        <MenuItem value="home-appliances">
+                           Appliances
+                        </MenuItem>
+                        <MenuItem value="home-moving">
+                           Moving
+                        </MenuItem>
+                           </Box>
+                        )}
                         <ListSubheader>
                            Food
                         </ListSubheader>

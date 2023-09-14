@@ -21,6 +21,14 @@
         }
     ]
 
+    // Accounts
+    [
+        Type: string,
+        Name: string,
+        OpeningBalance: decimal,
+        Balance: decimal
+    ]
+
 
 
       dateObj = {
@@ -28,7 +36,6 @@
          day: string,
          month: integer idx,
          year: integer,
-         isToday: boolean,
          items: {
             income: [
                occurrenceObj,
