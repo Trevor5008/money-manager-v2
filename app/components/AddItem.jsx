@@ -42,9 +42,10 @@ export default function AddItem({
       month =
          month / 10 < 1 ? `0${month}` : `${month}`
 
-      setDateString(
-         `${year.toString()}-${month}-${date}`
-      )
+      // setDateString(
+      //    `${year.toString()}-${month}-${date}`
+      // )
+      
    }, [activeDate])
 
    // Expense/Income/Transfer
@@ -77,8 +78,6 @@ export default function AddItem({
       setItemAmount(inputValue)
    }
 
-   function showSubCategories()
-
    function clearItemFlds() {
       setItemType("")
       setIsRecurring(false)
@@ -97,8 +96,8 @@ export default function AddItem({
             amount: decimal,
             category: string
          }
+         */
 
-   */
    function postItem(evt) {
       evt.preventDefault()
 
@@ -110,7 +109,8 @@ export default function AddItem({
          category
       }
       console.log(itemObj)
-   }
+   }   
+
 
    return (
       <Stack
@@ -392,7 +392,7 @@ export default function AddItem({
                         flex: 1
                      }}
                   >
-                     <Select
+                     {/* <Select
                         id="category-select"
                         value={category}
                         label="Category"
@@ -442,7 +442,7 @@ export default function AddItem({
                         <MenuItem value="car-repairs">
                            Repairs
                         </MenuItem>
-                     </Select>
+                     </Select> */}
                   </FormControl>
                </Box>
                {/* Amount */}

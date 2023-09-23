@@ -1,4 +1,4 @@
-/* TODO: Organize data into schema
+/*
 
     [
         2023: {

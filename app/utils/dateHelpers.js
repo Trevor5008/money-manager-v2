@@ -1,3 +1,6 @@
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+
 const months = [
    "January",
    "February",
@@ -51,9 +54,12 @@ function parseSuffix(date) {
 }
 
 function getNumDays(month, year) {
+   const nextMonth = month <= 12 ? month + 1 : 0
+   const currentYear =
+      month <= 12 ? year : year - 1
    const daysInMonth = new Date(
-      year,
-      month + 1,
+      currentYear,
+      nextMonth,
       0
    ).getDate()
    return daysInMonth
@@ -100,49 +106,34 @@ function getLongName(day) {
 
 // Converts standard date string to custom date object
 function convertDate(dateStr, dates) {
-   const year = dateStr.getFullYear()
-   const month = dateStr.getMonth()
    const date = dateStr.getDate()
    let dateObj
    // loop over rows in dates matrix
-   for (const week of dates) {
-      // date object is w/in a week row
-      week.forEach((obj) => {
-         if (
-            obj?.year === year &&
-            obj?.month === month &&
-            obj?.date === date
-         ) {
-            dateObj = obj
-            return
-         }
-      })
-   }
+   dates.forEach((obj) => {
+      if (obj?.date === date) {
+         dateObj = obj
+         return
+      }
+   })
    return dateObj
 }
 
-function generateMonthDates(month, year, today) {
-   const firstIdx = findFirstDay(month, year)
+// Generates seed data for database
+function generateMonthDates(month, year) {
+   const firstIdx = findFirstDay(month, year) // 0 = "Sunday"
    const numWeeks = getNumWeeks(month, year)
    const numDays = getNumDays(month, year)
    let dayCounter = 1
    const dates = []
 
    for (let i = 0; i < numWeeks; i++) {
-      const week = []
+      // Aligns date w/ correct weekday
       for (let j = 0; j < 7; j++) {
-         if (i === 0 && j < firstIdx) {
-            week.push(null) // Days before the first day
-         } else if (dayCounter <= numDays) {
-            const current = new Date(
-               year,
-               month,
-               dayCounter
-            )
-            const isToday = isCurrentToday(
-               today,
-               current
-            )
+         if (
+            dayCounter <= numDays ||
+            (i === 0 && j >= firstIdx)
+         ) {
+            // Creates date string
             const date = new Date(
                year,
                month,
@@ -151,29 +142,61 @@ function generateMonthDates(month, year, today) {
             const dateObj = {
                date: date.getDate(),
                day: weekDays[date.getDay()],
-               month,
-               year,
-               isToday,
-               items: {
-                  income: [],
-                  expenses: [],
-                  transfers: [],
-                  debtPayments: []
+               income: {
+                  create: []
+               },
+               expenses: {
+                  create: []
+               },
+               transfers: {
+                  create: []
+               },
+               debtPayments: {
+                  create: []
                }
             }
-            week.push(dateObj)
             dayCounter++
-         } else {
-            week.push(null) // Days after the last day
+            dates.push(dateObj)
          }
       }
-      dates.push(week)
    }
    return dates
 }
 
+// Query db for current Month data
+// async function generateMonthMatrix(month, year) {
+//    const yearId = await prisma.year.findUnique({
+//       where: {
+//          year
+//       }
+//    }).id
+//    console.log(yearId)
+//    // Generate 2D array of weeks
+//    // const numWeeks = getNumWeeks(month, year)
+//    // let pastFirstDay = false
+//    // const currentMonth = []
+//    // // iterate over each week #
+//    // for (let i = 0; i < numWeeks; i++) {
+//    //    const week = []
+//    //    weekDays.forEach(day => {
+//    //       if (i === 0 && dates[0].day === day) {
+//    //          pastFirstDay = true
+//    //       }
+//    //       if (pastFirstDay && dates.length) {
+//    //           week.push(dates.shift())
+//    //       } else {
+//    //          week.push(null)
+//    //       }
+//    //    })
+//    //    currentMonth.push(week)
+//    // }
+//    // console.log(currentMonth)
+// }
+// generateMonthMatrix(0, 2023)
 module.exports = {
    generateMonthDates,
+   // generateMonthMatrix,
+   getNumWeeks,
    months,
    weekDays,
    weekDaysFull,

@@ -1,9 +1,8 @@
-"use client"
+'use client'
 import { useEffect, useState } from "react"
 import {
-   generateMonthDates,
-   months,
-   convertDate
+   months, // ex. "January"
+   generateMonthMatrix // 2D array rows = weeks
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
 import Notes from "./components/Notes"
@@ -13,35 +12,38 @@ import AddItem from "./components/AddItem"
 import { Box, Paper, Stack } from "@mui/material"
 
 export default function page() {
-   const [dates, setDates] = useState([]) // array of date objects
-   const [today, setToday] = useState(null) // date object
-   const [currentMonth, setCurrentMonth] =
-      useState(0) // month string name
-   const [currentYear, setCurrentYear] =
-      useState(0) // year integer value ex. 2023
-   const [dataReady, setDataReady] =
-      useState(false)
-   const [activeDate, setActiveDate] = useState(0) // date integer
-   const [transactionsView, setTransactionsView] =
-      useState(true)
-   const [accountsView, setAcccountsView] =
-      useState(false)
-   const [addItemsView, setAddItemsView] =
-      useState(false)
+      const [currentMonthDates, setCurrentMonthDates] = useState([])
+      const [todayDate, setTodayDate] = useState(null)
+   // useEffect(() => {
+   //    const today = new Date() // Date string
+   //    const monthIdx = today.getMonth() // Integer index
+   //    const year = today.getFullYear() // Integer year 
+   //    // const currentMonthDates =
+   //    //    generateMonthMatrix(monthIdx, year) // array of custom date objects
+   //    // const currentMonthWeeks = getNumWeeks(months[monthIdx], year)
+   //    // const dateObj = convertDate(today, currentMonthDates)
+   //    //    setCurrentMonth(months[monthIdx]) // Month string
+   //    // setCurrentYear(year) // Year integer
+   //    // setDates(currentMonthDates) // array of custom date objects
+   //    // setDataReady(true)
+   //    // setActiveDate(dateObj) // Custom date object
+   //    // setToday(dateObj) // Custom date object
+   // }, [])
 
    useEffect(() => {
-      const today = new Date() // Date string
-      const monthIdx = today.getMonth() // Integer index
-      const year = today.getFullYear() // Integer year 
-      const currentMonthDates =
-         generateMonthDates(monthIdx, year, today) // array of custom date objects
-      const dateObj = convertDate(today, currentMonthDates)
-         setCurrentMonth(months[monthIdx]) // Month string
-      setCurrentYear(year) // Year integer
-      setDates(currentMonthDates) // array of custom date objects
-      setDataReady(true)
-      setActiveDate(dateObj) // Custom date object
-      setToday(dateObj) // Custom date object
+      // Retrieve current month dates from db
+      fetch('/api/get-year')
+         .then(res => res.json())
+         .then(res => {
+            const { dates } = res.dates.months[0]
+            setCurrentMonthDates(dates)
+            return dates
+         })
+         .then(res => {
+            const today = new Date().getDate()
+            const todayDate = res.find(date => date.date === today)
+            console.log(todayDate)
+         })
    }, [])
 
    function handleDateSelect(date) {
@@ -70,7 +72,6 @@ export default function page() {
       }
    }
 
-   // TODO: Fix single month issue
    function handleDatePick(evt) {
       const dateStrArr =
          evt.target.value.split("-")
@@ -90,25 +91,16 @@ export default function page() {
          }
       }
    }
-
+   
    return (
       <main>
          <Box sx={{ display: "flex" }}>
-            <Calendar
-               dates={dates} // array of date objects
-               currentMonth={currentMonth}
-               currentYear={currentYear}
-               dataReady={dataReady} // loaded boolen
-               handleSelect={handleDateSelect}
-               today={today} // date object
-               activeDate={activeDate}
-               resetActive={resetActive}
-            />
+            {/* <Calendar /> */}
             {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>
-               <CustomTabPanel
+               {/* <CustomTabPanel
                   handleSelect={handleTabSelect}
-               />
+               /> */}
                <Paper
                   elevation={3}
                   sx={{
@@ -120,7 +112,7 @@ export default function page() {
                      flex: 1
                   }}
                >
-                  {transactionsView ? (
+                  {/* {transactionsView ? (
                      <Notes
                         activeDate={activeDate} // date object
                         today={today} // date object
@@ -134,7 +126,15 @@ export default function page() {
                            handleDatePick
                         }
                      />
-                  ) : null}
+                  ) : null} */}
+                  {
+                     currentMonthDates && 
+                        currentMonthDates.map((date, idx) => {
+                        return (
+                           <h2 key={`date-${idx}`}>{date.date}</h2>
+                        )
+                     })
+                  }
                </Paper>
             </Stack>
          </Box>
