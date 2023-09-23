@@ -1,6 +1,3 @@
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
-
 const months = [
    "January",
    "February",
@@ -163,39 +160,8 @@ function generateMonthDates(month, year) {
    return dates
 }
 
-// Query db for current Month data
-// async function generateMonthMatrix(month, year) {
-//    const yearId = await prisma.year.findUnique({
-//       where: {
-//          year
-//       }
-//    }).id
-//    console.log(yearId)
-//    // Generate 2D array of weeks
-//    // const numWeeks = getNumWeeks(month, year)
-//    // let pastFirstDay = false
-//    // const currentMonth = []
-//    // // iterate over each week #
-//    // for (let i = 0; i < numWeeks; i++) {
-//    //    const week = []
-//    //    weekDays.forEach(day => {
-//    //       if (i === 0 && dates[0].day === day) {
-//    //          pastFirstDay = true
-//    //       }
-//    //       if (pastFirstDay && dates.length) {
-//    //           week.push(dates.shift())
-//    //       } else {
-//    //          week.push(null)
-//    //       }
-//    //    })
-//    //    currentMonth.push(week)
-//    // }
-//    // console.log(currentMonth)
-// }
-// generateMonthMatrix(0, 2023)
 module.exports = {
    generateMonthDates,
-   // generateMonthMatrix,
    getNumWeeks,
    months,
    weekDays,

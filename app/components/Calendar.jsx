@@ -9,10 +9,10 @@ import Week from "../components/Week"
 
 export default function Calendar({
    dates,
+   numWeeks,
    currentMonth,
    currentYear,
    dataReady,
-   numWeeks,
    handleSelect,
    activeDate,
    resetActive
@@ -21,6 +21,7 @@ export default function Calendar({
    const weeks = [
       ...Array(numWeeks).keys()
    ]
+
    return (
       <Paper
          elevation={3}

@@ -1,8 +1,9 @@
-'use client'
+"use client"
 import { useEffect, useState } from "react"
 import {
    months, // ex. "January"
-   generateMonthMatrix // 2D array rows = weeks
+   generateMonthMatrix, // 2D array rows = weeks
+   getNumWeeks
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
 import Notes from "./components/Notes"
@@ -12,12 +13,21 @@ import AddItem from "./components/AddItem"
 import { Box, Paper, Stack } from "@mui/material"
 
 export default function page() {
-      const [currentMonthDates, setCurrentMonthDates] = useState([])
-      const [todayDate, setTodayDate] = useState(null)
+   const [
+      currentMonthDates,
+      setCurrentMonthDates
+   ] = useState([])
+   const [todaysDate, setTodaysDate] =
+      useState(null)
+   const [currentYear, setCurrentYear] = useState(0)
+   const [currentMonth, setCurrentMonth] = useState(0)
+   const [numWeeks, setNumWeeks] = useState(0)
+   const [dataReady, setDataReady] =
+      useState(false)
    // useEffect(() => {
    //    const today = new Date() // Date string
    //    const monthIdx = today.getMonth() // Integer index
-   //    const year = today.getFullYear() // Integer year 
+   //    const year = today.getFullYear() // Integer year
    //    // const currentMonthDates =
    //    //    generateMonthMatrix(monthIdx, year) // array of custom date objects
    //    // const currentMonthWeeks = getNumWeeks(months[monthIdx], year)
@@ -32,18 +42,30 @@ export default function page() {
 
    useEffect(() => {
       // Retrieve current month dates from db
-      fetch('/api/get-year')
-         .then(res => res.json())
-         .then(res => {
-            const { dates } = res.dates.months[0]
+      fetch("/api/get-year")
+         .then((res) => res.json())
+         .then((res) => {
+            const { year } = res.dates
+            const { dates, month } =
+               res.dates.months[0]
             setCurrentMonthDates(dates)
+            const numberWeeks = getNumWeeks(
+               month,
+               year
+            )
+            setNumWeeks(numberWeeks)
+            setCurrentYear(year)
+            setCurrentMonth(month)
             return dates
          })
-         .then(res => {
+         .then((res) => {
             const today = new Date().getDate()
-            const todayDate = res.find(date => date.date === today)
-            console.log(todayDate)
+            const todayDate = res.find(
+               (date) => date.date === today
+            )
+            setTodaysDate(todayDate)
          })
+         .then(() => setDataReady(true))
    }, [])
 
    function handleDateSelect(date) {
@@ -91,11 +113,17 @@ export default function page() {
          }
       }
    }
-   
+
    return (
       <main>
          <Box sx={{ display: "flex" }}>
-            {/* <Calendar /> */}
+            <Calendar
+               dates={currentMonthDates}
+               numWeeks={numWeeks}
+               currentYear={currentYear}
+               currentMonth={currentMonth}
+               dataReady={dataReady}
+            />
             {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>
                {/* <CustomTabPanel
@@ -127,14 +155,18 @@ export default function page() {
                         }
                      />
                   ) : null} */}
-                  {
-                     currentMonthDates && 
-                        currentMonthDates.map((date, idx) => {
-                        return (
-                           <h2 key={`date-${idx}`}>{date.date}</h2>
-                        )
-                     })
-                  }
+                  {currentMonthDates &&
+                     currentMonthDates.map(
+                        (date, idx) => {
+                           return (
+                              <h2
+                                 key={`date-${idx}`}
+                              >
+                                 {date.date}
+                              </h2>
+                           )
+                        }
+                     )}
                </Paper>
             </Stack>
          </Box>

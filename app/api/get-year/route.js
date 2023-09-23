@@ -13,10 +13,12 @@ export async function GET(){
         },
         select: {
             id: true,
+            year: true,
             months: {
                 where: { month },
                 select: {
                     id: true,
+                    month: true,
                     dates: true
                 }
             }

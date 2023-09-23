@@ -1,13 +1,15 @@
 import { Box } from "@mui/material"
+import { weekDays } from "../utils/dateHelpers"
 import CalendarDay from "./CalendarDay"
 
 export default function Week({
    dates,
    handleSelect,
    activeDate,
-   reset
+   reset,
+   week
 }) {
-   const daysOfWeek = [...Array(7).keys()]
+   
    return (
       <Box
          display="flex"
@@ -15,10 +17,10 @@ export default function Week({
          height="100%"
       >
          {dates &&
-            daysOfWeek.map((date, idx) => {
+            weekDays.map((day, idx) => {
                return (
                   <CalendarDay
-                     key={idx}
+                     key={`${week}-${idx}`}
                      date={date}
                      handleSelect={handleSelect}
                      activeDate={activeDate}
