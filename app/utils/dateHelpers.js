@@ -160,8 +160,30 @@ function generateMonthDates(month, year) {
    return dates
 }
 
+// Helper for generate month matrix method
+function splitArrIntoWeeks(dates) {
+   const weeksArr = [];
+   for (let i = 0; i < dates.length; i += 7) {
+     const week = dates.slice(i, i + 7);
+     weeksArr.push(week);
+   }
+   return weeksArr;
+ }
+
+function generateFullMonth(dates) {
+   const firstDayIdx = weekDays.indexOf(dates[0].day)
+   const lastDayIdx = weekDays.indexOf(dates[dates.length - 1].day)
+   const paddingStart = Array(firstDayIdx).fill({})
+   const paddingEnd = Array(lastDayIdx - 6).fill({})
+   const monthDatesArr = [...paddingStart, ...dates, ...paddingEnd]
+   const monthsMatrix = splitArrIntoWeeks(monthDatesArr)
+   console.log(monthsMatrix)
+
+}
+
 module.exports = {
    generateMonthDates,
+   generateFullMonth,
    getNumWeeks,
    months,
    weekDays,

@@ -9,7 +9,6 @@ import Week from "../components/Week"
 
 export default function Calendar({
    dates,
-   numWeeks,
    currentMonth,
    currentYear,
    dataReady,
@@ -17,10 +16,6 @@ export default function Calendar({
    activeDate,
    resetActive
 }) {
-   // Creates an array of ints representing # weeks in month
-   const weeks = [
-      ...Array(numWeeks).keys()
-   ]
 
    return (
       <Paper
@@ -94,7 +89,7 @@ export default function Calendar({
             {/* Array of date objs starting w/ first day of month */}
                {dates &&
                   // Maps over array of week # ints (ex. 5 rows of data)
-                  weeks.map((week, idx) => {
+                  dates.map((week, idx) => {
                      // TODO: Need to pass range of dates for each week somehow...
                         return (
                            <Week

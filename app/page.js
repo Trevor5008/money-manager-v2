@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import {
    months, // ex. "January"
-   generateMonthMatrix, // 2D array rows = weeks
+   generateFullMonth, // 2D array rows = weeks
    getNumWeeks
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
@@ -21,7 +21,6 @@ export default function page() {
       useState(null)
    const [currentYear, setCurrentYear] = useState(0)
    const [currentMonth, setCurrentMonth] = useState(0)
-   const [numWeeks, setNumWeeks] = useState(0)
    const [dataReady, setDataReady] =
       useState(false)
    // useEffect(() => {
@@ -48,14 +47,10 @@ export default function page() {
             const { year } = res.dates
             const { dates, month } =
                res.dates.months[0]
-            setCurrentMonthDates(dates)
-            const numberWeeks = getNumWeeks(
-               month,
-               year
-            )
-            setNumWeeks(numberWeeks)
             setCurrentYear(year)
             setCurrentMonth(month)
+            const currentDates = generateFullMonth(dates)
+            setCurrentMonthDates(currentDates)
             return dates
          })
          .then((res) => {
@@ -119,7 +114,6 @@ export default function page() {
          <Box sx={{ display: "flex" }}>
             <Calendar
                dates={currentMonthDates}
-               numWeeks={numWeeks}
                currentYear={currentYear}
                currentMonth={currentMonth}
                dataReady={dataReady}
