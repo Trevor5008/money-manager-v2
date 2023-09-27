@@ -177,7 +177,7 @@ function generateFullMonth(dates) {
    const paddingEnd = Array(lastDayIdx - 6).fill({})
    const monthDatesArr = [...paddingStart, ...dates, ...paddingEnd]
    const monthsMatrix = splitArrIntoWeeks(monthDatesArr)
-   console.log(monthsMatrix)
+   return monthsMatrix
 
 }
 

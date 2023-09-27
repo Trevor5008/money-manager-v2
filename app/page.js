@@ -12,32 +12,24 @@ import Accounts from "./components/Accounts"
 import AddItem from "./components/AddItem"
 import { Box, Paper, Stack } from "@mui/material"
 
+// TODO: Fix formatting of date objects, 
+// along with active vs today date
+
 export default function page() {
    const [
       currentMonthDates,
       setCurrentMonthDates
    ] = useState([])
-   const [todaysDate, setTodaysDate] =
+   const [activeDate, setActiveDate] =
       useState(null)
+   const [today, setToday] = useState(null)
    const [currentYear, setCurrentYear] = useState(0)
    const [currentMonth, setCurrentMonth] = useState(0)
    const [dataReady, setDataReady] =
       useState(false)
-   // useEffect(() => {
-   //    const today = new Date() // Date string
-   //    const monthIdx = today.getMonth() // Integer index
-   //    const year = today.getFullYear() // Integer year
-   //    // const currentMonthDates =
-   //    //    generateMonthMatrix(monthIdx, year) // array of custom date objects
-   //    // const currentMonthWeeks = getNumWeeks(months[monthIdx], year)
-   //    // const dateObj = convertDate(today, currentMonthDates)
-   //    //    setCurrentMonth(months[monthIdx]) // Month string
-   //    // setCurrentYear(year) // Year integer
-   //    // setDates(currentMonthDates) // array of custom date objects
-   //    // setDataReady(true)
-   //    // setActiveDate(dateObj) // Custom date object
-   //    // setToday(dateObj) // Custom date object
-   // }, [])
+   const [accountsView, setAccountsView] = useState(false)
+   const [transactionsView, setTransactionsView] = useState(false)
+   const [addItemsView, setAddItemsView] = useState(false)
 
    useEffect(() => {
       // Retrieve current month dates from db
@@ -58,7 +50,8 @@ export default function page() {
             const todayDate = res.find(
                (date) => date.date === today
             )
-            setTodaysDate(todayDate)
+            setActiveDate(todayDate)
+            setToday(todayDate)
          })
          .then(() => setDataReady(true))
    }, [])
@@ -75,15 +68,15 @@ export default function page() {
 
    function handleTabSelect(val) {
       if (val === 0) {
-         setAcccountsView(false)
+         setAccountsView(false)
          setTransactionsView(true)
          setAddItemsView(false)
       } else if (val === 1) {
-         setAcccountsView(true)
+         setAccountsView(true)
          setTransactionsView(false)
          setAddItemsView(false)
       } else {
-         setAcccountsView(false)
+         setAccountsView(false)
          setTransactionsView(false)
          setAddItemsView(true)
       }
@@ -120,9 +113,9 @@ export default function page() {
             />
             {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>
-               {/* <CustomTabPanel
+               <CustomTabPanel
                   handleSelect={handleTabSelect}
-               /> */}
+               />
                <Paper
                   elevation={3}
                   sx={{
@@ -134,7 +127,7 @@ export default function page() {
                      flex: 1
                   }}
                >
-                  {/* {transactionsView ? (
+                  {transactionsView ? (
                      <Notes
                         activeDate={activeDate} // date object
                         today={today} // date object
@@ -148,7 +141,7 @@ export default function page() {
                            handleDatePick
                         }
                      />
-                  ) : null} */}
+                  ) : null}
                   {currentMonthDates &&
                      currentMonthDates.map(
                         (date, idx) => {

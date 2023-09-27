@@ -90,7 +90,6 @@ export default function Calendar({
                {dates &&
                   // Maps over array of week # ints (ex. 5 rows of data)
                   dates.map((week, idx) => {
-                     // TODO: Need to pass range of dates for each week somehow...
                         return (
                            <Week
                               week={week}

@@ -9,19 +9,20 @@ export default function Week({
    reset,
    week
 }) {
-   
+
    return (
       <Box
          display="flex"
          width="100%"
          height="100%"
       >
-         {dates &&
-            weekDays.map((day, idx) => {
+         {week &&
+            week.map((date, idx) => {
                return (
                   <CalendarDay
-                     key={`${week}-${idx}`}
+                     key={`${date}-${idx}`}
                      date={date}
+                     dates={dates}
                      handleSelect={handleSelect}
                      activeDate={activeDate}
                      reset={reset}
