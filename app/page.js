@@ -106,6 +106,8 @@ export default function page() {
       <main>
          <Box sx={{ display: "flex" }}>
             <Calendar
+               today={today}
+               activeDate={activeDate}
                dates={currentMonthDates}
                currentYear={currentYear}
                currentMonth={currentMonth}

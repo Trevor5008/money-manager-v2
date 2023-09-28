@@ -8,12 +8,13 @@ import { weekDays } from "../utils/dateHelpers"
 import Week from "../components/Week"
 
 export default function Calendar({
+   today,
+   activeDate,
    dates,
    currentMonth,
    currentYear,
    dataReady,
    handleSelect,
-   activeDate,
    resetActive
 }) {
 
@@ -104,6 +105,7 @@ export default function Calendar({
                               activeDate={
                                  activeDate
                               }
+                              today={today}
                               reset={resetActive}
                            />
                         )

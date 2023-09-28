@@ -3,9 +3,10 @@ import { weekDays } from "../utils/dateHelpers"
 import CalendarDay from "./CalendarDay"
 
 export default function Week({
+   today,
+   activeDate,
    dates,
    handleSelect,
-   activeDate,
    reset,
    week
 }) {
@@ -21,6 +22,7 @@ export default function Week({
                return (
                   <CalendarDay
                      key={`${date}-${idx}`}
+                     today={today}
                      date={date}
                      dates={dates}
                      handleSelect={handleSelect}
