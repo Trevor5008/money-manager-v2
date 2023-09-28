@@ -57,7 +57,7 @@ export default function page() {
    }, [])
 
    function handleDateSelect(date) {
-      if (date) {
+      if (date?.date) {
          setActiveDate(date)
       }
    }
@@ -112,6 +112,7 @@ export default function page() {
                currentYear={currentYear}
                currentMonth={currentMonth}
                dataReady={dataReady}
+               handleSelect={handleDateSelect}
             />
             {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>

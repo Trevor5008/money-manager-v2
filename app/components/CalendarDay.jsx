@@ -9,7 +9,7 @@ export default function CalendarDay({
    reset
 }) {
    const [isViewed, setIsViewed] = useState(false)
-   const [isActive, setIsActive] = useState(false)
+   const isActive = activeDate.date === date.date
 
    const isToday = date.date === today.date
 
