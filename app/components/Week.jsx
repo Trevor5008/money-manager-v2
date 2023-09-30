@@ -1,5 +1,4 @@
 import { Box } from "@mui/material"
-import { weekDays } from "../utils/dateHelpers"
 import CalendarDay from "./CalendarDay"
 
 export default function Week({

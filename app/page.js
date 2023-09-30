@@ -62,6 +62,15 @@ export default function page() {
       }
    }
 
+   // Handles user selection of prev or next month
+   function prevMonth() {
+      console.log('prev month')
+   }
+
+   function nextMonth() {
+      console.log('next month')
+   }
+
    function resetActive() {
       setActiveDate(today)
    }
@@ -113,6 +122,8 @@ export default function page() {
                currentMonth={currentMonth}
                dataReady={dataReady}
                handleSelect={handleDateSelect}
+               prevMonth={prevMonth}
+               nextMonth={nextMonth}
             />
             {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>

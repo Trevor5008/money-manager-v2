@@ -4,7 +4,9 @@ import {
    Typography,
    Paper
 } from "@mui/material"
-import { weekDays } from "../utils/dateHelpers"
+import { weekDays, months } from "../utils/dateHelpers"
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import Week from "../components/Week"
 
 export default function Calendar({
@@ -15,8 +17,11 @@ export default function Calendar({
    currentYear,
    dataReady,
    handleSelect,
+   prevMonth,
+   nextMonth,
    resetActive
 }) {
+   const month = months[currentMonth]
 
    return (
       <Paper
@@ -42,15 +47,24 @@ export default function Calendar({
             <Box
                display="flex"
                justifyContent="center"
+               alignItems="center"
+               marginBottom={1}
             >
-               <Typography
-                  variant="h3"
-                  marginBottom={2}
-               >
+               <ArrowBackIosIcon
+                  onClick={prevMonth}
+                  sx={{
+                     marginRight: 1
+                  }}
+               />
+               <Typography variant="h3">
                   {dataReady
-                     ? `${currentMonth} ${currentYear}`
+                     ? `${month} ${currentYear}`
                      : "Loading..."}
                </Typography>
+               <ArrowForwardIosIcon
+                  onClick={nextMonth}
+                  sx={{ marginLeft: 2 }}
+               />
             </Box>
             {/* Days of Week Header Row */}
             <Box
@@ -59,7 +73,7 @@ export default function Calendar({
                marginBottom={1}
                width="100%"
             >
-            {/* Array of string days of the week */}
+               {/* Array of string days of the week */}
                {weekDays &&
                   weekDays.map((day, idx) => {
                      return (
@@ -87,29 +101,25 @@ export default function Calendar({
                height="100%"
                marginBottom="3%"
             >
-            {/* Array of date objs starting w/ first day of month */}
+               {/* Array of date objs starting w/ first day of month */}
                {dates &&
                   // Maps over array of week # ints (ex. 5 rows of data)
                   dates.map((week, idx) => {
-                        return (
-                           <Week
-                              week={week}
-                              key={idx}
-                              id={`week ${
-                                 idx + 1
-                              }`}
-                              dates={dates}
-                              handleSelect={
-                                 handleSelect
-                              }
-                              activeDate={
-                                 activeDate
-                              }
-                              today={today}
-                              reset={resetActive}
-                           />
-                        )
-                     })}
+                     return (
+                        <Week
+                           week={week}
+                           key={idx}
+                           id={`week ${idx + 1}`}
+                           dates={dates}
+                           handleSelect={
+                              handleSelect
+                           }
+                           activeDate={activeDate}
+                           today={today}
+                           reset={resetActive}
+                        />
+                     )
+                  })}
             </Box>
          </Box>
       </Paper>
