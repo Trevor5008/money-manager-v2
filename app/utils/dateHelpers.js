@@ -51,9 +51,12 @@ function parseSuffix(date) {
 }
 
 function getNumDays(month, year) {
+   const nextMonth = month <= 12 ? month + 1 : 0
+   const currentYear =
+      month <= 12 ? year : year - 1
    const daysInMonth = new Date(
-      year,
-      month + 1,
+      currentYear,
+      nextMonth,
       0
    ).getDate()
    return daysInMonth
@@ -100,49 +103,34 @@ function getLongName(day) {
 
 // Converts standard date string to custom date object
 function convertDate(dateStr, dates) {
-   const year = dateStr.getFullYear()
-   const month = dateStr.getMonth()
    const date = dateStr.getDate()
    let dateObj
    // loop over rows in dates matrix
-   for (const week of dates) {
-      // date object is w/in a week row
-      week.forEach((obj) => {
-         if (
-            obj?.year === year &&
-            obj?.month === month &&
-            obj?.date === date
-         ) {
-            dateObj = obj
-            return
-         }
-      })
-   }
+   dates.forEach((obj) => {
+      if (obj?.date === date) {
+         dateObj = obj
+         return
+      }
+   })
    return dateObj
 }
 
-function generateMonthDates(month, year, today) {
-   const firstIdx = findFirstDay(month, year)
+// Generates seed data for database
+function generateMonthDates(month, year) {
+   const firstIdx = findFirstDay(month, year) // 0 = "Sunday"
    const numWeeks = getNumWeeks(month, year)
    const numDays = getNumDays(month, year)
    let dayCounter = 1
    const dates = []
 
    for (let i = 0; i < numWeeks; i++) {
-      const week = []
+      // Aligns date w/ correct weekday
       for (let j = 0; j < 7; j++) {
-         if (i === 0 && j < firstIdx) {
-            week.push(null) // Days before the first day
-         } else if (dayCounter <= numDays) {
-            const current = new Date(
-               year,
-               month,
-               dayCounter
-            )
-            const isToday = isCurrentToday(
-               today,
-               current
-            )
+         if (
+            dayCounter <= numDays ||
+            (i === 0 && j >= firstIdx)
+         ) {
+            // Creates date string
             const date = new Date(
                year,
                month,
@@ -151,29 +139,52 @@ function generateMonthDates(month, year, today) {
             const dateObj = {
                date: date.getDate(),
                day: weekDays[date.getDay()],
-               month,
-               year,
-               isToday,
-               items: {
-                  income: [],
-                  expenses: [],
-                  transfers: [],
-                  debtPayments: []
+               income: {
+                  create: []
+               },
+               expenses: {
+                  create: []
+               },
+               transfers: {
+                  create: []
+               },
+               debtPayments: {
+                  create: []
                }
             }
-            week.push(dateObj)
             dayCounter++
-         } else {
-            week.push(null) // Days after the last day
+            dates.push(dateObj)
          }
       }
-      dates.push(week)
    }
    return dates
 }
 
+// Helper for generate month matrix method
+function splitArrIntoWeeks(dates) {
+   const weeksArr = [];
+   for (let i = 0; i < dates.length; i += 7) {
+     const week = dates.slice(i, i + 7);
+     weeksArr.push(week);
+   }
+   return weeksArr;
+ }
+
+function generateFullMonth(dates) {
+   const firstDayIdx = weekDays.indexOf(dates[0].day)
+   const lastDayIdx = weekDays.indexOf(dates[dates.length - 1].day)
+   const paddingStart = Array(firstDayIdx).fill({})
+   const paddingEnd = Array(lastDayIdx - 6).fill({})
+   const monthDatesArr = [...paddingStart, ...dates, ...paddingEnd]
+   const monthsMatrix = splitArrIntoWeeks(monthDatesArr)
+   return monthsMatrix
+
+}
+
 module.exports = {
    generateMonthDates,
+   generateFullMonth,
+   getNumWeeks,
    months,
    weekDays,
    weekDaysFull,

@@ -1,9 +1,9 @@
 "use client"
 import { useEffect, useState } from "react"
 import {
-   generateMonthDates,
-   months,
-   convertDate
+   months, // ex. "January"
+   generateFullMonth, // 2D array rows = weeks
+   getNumWeeks
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
 import Notes from "./components/Notes"
@@ -12,40 +12,52 @@ import Accounts from "./components/Accounts"
 import AddItem from "./components/AddItem"
 import { Box, Paper, Stack } from "@mui/material"
 
+// TODO: Fix formatting of date objects, 
+// along with active vs today date
+
 export default function page() {
-   const [dates, setDates] = useState([]) // array of date objects
-   const [today, setToday] = useState(null) // date object
-   const [currentMonth, setCurrentMonth] =
-      useState(0) // month string name
-   const [currentYear, setCurrentYear] =
-      useState(0) // year integer value ex. 2023
+   const [
+      currentMonthDates,
+      setCurrentMonthDates
+   ] = useState([])
+   const [activeDate, setActiveDate] =
+      useState(null)
+   const [today, setToday] = useState(null)
+   const [currentYear, setCurrentYear] = useState(0)
+   const [currentMonth, setCurrentMonth] = useState(0)
    const [dataReady, setDataReady] =
       useState(false)
-   const [activeDate, setActiveDate] = useState(0) // date integer
-   const [transactionsView, setTransactionsView] =
-      useState(true)
-   const [accountsView, setAcccountsView] =
-      useState(false)
-   const [addItemsView, setAddItemsView] =
-      useState(false)
+   const [accountsView, setAccountsView] = useState(false)
+   const [transactionsView, setTransactionsView] = useState(false)
+   const [addItemsView, setAddItemsView] = useState(false)
 
    useEffect(() => {
-      const today = new Date() // Date string
-      const monthIdx = today.getMonth() // Integer index
-      const year = today.getFullYear() // Integer year 
-      const currentMonthDates =
-         generateMonthDates(monthIdx, year, today) // array of custom date objects
-      const dateObj = convertDate(today, currentMonthDates)
-         setCurrentMonth(months[monthIdx]) // Month string
-      setCurrentYear(year) // Year integer
-      setDates(currentMonthDates) // array of custom date objects
-      setDataReady(true)
-      setActiveDate(dateObj) // Custom date object
-      setToday(dateObj) // Custom date object
+      // Retrieve current month dates from db
+      fetch("/api/get-year")
+         .then((res) => res.json())
+         .then((res) => {
+            const { year } = res.dates
+            const { dates, month } =
+               res.dates.months[0]
+            setCurrentYear(year)
+            setCurrentMonth(month)
+            const currentDates = generateFullMonth(dates)
+            setCurrentMonthDates(currentDates)
+            return dates
+         })
+         .then((res) => {
+            const today = new Date().getDate()
+            const todayDate = res.find(
+               (date) => date.date === today
+            )
+            setActiveDate(todayDate)
+            setToday(todayDate)
+         })
+         .then(() => setDataReady(true))
    }, [])
 
    function handleDateSelect(date) {
-      if (date) {
+      if (date?.date) {
          setActiveDate(date)
       }
    }
@@ -56,21 +68,20 @@ export default function page() {
 
    function handleTabSelect(val) {
       if (val === 0) {
-         setAcccountsView(false)
+         setAccountsView(false)
          setTransactionsView(true)
          setAddItemsView(false)
       } else if (val === 1) {
-         setAcccountsView(true)
+         setAccountsView(true)
          setTransactionsView(false)
          setAddItemsView(false)
       } else {
-         setAcccountsView(false)
+         setAccountsView(false)
          setTransactionsView(false)
          setAddItemsView(true)
       }
    }
 
-   // TODO: Fix single month issue
    function handleDatePick(evt) {
       const dateStrArr =
          evt.target.value.split("-")
@@ -95,14 +106,13 @@ export default function page() {
       <main>
          <Box sx={{ display: "flex" }}>
             <Calendar
-               dates={dates} // array of date objects
-               currentMonth={currentMonth}
-               currentYear={currentYear}
-               dataReady={dataReady} // loaded boolen
-               handleSelect={handleDateSelect}
-               today={today} // date object
+               today={today}
                activeDate={activeDate}
-               resetActive={resetActive}
+               dates={currentMonthDates}
+               currentYear={currentYear}
+               currentMonth={currentMonth}
+               dataReady={dataReady}
+               handleSelect={handleDateSelect}
             />
             {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>
@@ -135,6 +145,18 @@ export default function page() {
                         }
                      />
                   ) : null}
+                  {currentMonthDates &&
+                     currentMonthDates.map(
+                        (date, idx) => {
+                           return (
+                              <h2
+                                 key={`date-${idx}`}
+                              >
+                                 {date.date}
+                              </h2>
+                           )
+                        }
+                     )}
                </Paper>
             </Stack>
          </Box>

@@ -42,9 +42,10 @@ export default function AddItem({
       month =
          month / 10 < 1 ? `0${month}` : `${month}`
 
-      setDateString(
-         `${year.toString()}-${month}-${date}`
-      )
+      // setDateString(
+      //    `${year.toString()}-${month}-${date}`
+      // )
+      
    }, [activeDate])
 
    // Expense/Income/Transfer
@@ -73,9 +74,8 @@ export default function AddItem({
    }
 
    function handleAmountChange(evt) {
-      const inputValue = evt.target.value
-
-      setItemAmount(typeof inputValue)
+      const inputValue = parseFloat(evt.target.value)
+      setItemAmount(inputValue)
    }
 
    function clearItemFlds() {
@@ -96,8 +96,8 @@ export default function AddItem({
             amount: decimal,
             category: string
          }
+         */
 
-   */
    function postItem(evt) {
       evt.preventDefault()
 
@@ -109,7 +109,8 @@ export default function AddItem({
          category
       }
       console.log(itemObj)
-   }
+   }   
+
 
    return (
       <Stack
@@ -391,7 +392,7 @@ export default function AddItem({
                         flex: 1
                      }}
                   >
-                     <Select
+                     {/* <Select
                         id="category-select"
                         value={category}
                         label="Category"
@@ -401,6 +402,25 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
+                        <ListSubheader onMouseOver={showSubCategories}>
+                           Home
+                        </ListSubheader>
+                        {showSubs && (
+                           <Box>
+                              <MenuItem value="home-rent">
+                           Rent
+                        </MenuItem>
+                        <MenuItem value="home-goods">
+                           Goods
+                        </MenuItem>
+                        <MenuItem value="home-appliances">
+                           Appliances
+                        </MenuItem>
+                        <MenuItem value="home-moving">
+                           Moving
+                        </MenuItem>
+                           </Box>
+                        )}
                         <ListSubheader>
                            Food
                         </ListSubheader>
@@ -422,7 +442,7 @@ export default function AddItem({
                         <MenuItem value="car-repairs">
                            Repairs
                         </MenuItem>
-                     </Select>
+                     </Select> */}
                   </FormControl>
                </Box>
                {/* Amount */}

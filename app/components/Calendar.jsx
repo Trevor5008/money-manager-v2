@@ -8,12 +8,13 @@ import { weekDays } from "../utils/dateHelpers"
 import Week from "../components/Week"
 
 export default function Calendar({
+   today,
+   activeDate,
    dates,
    currentMonth,
    currentYear,
    dataReady,
    handleSelect,
-   activeDate,
    resetActive
 }) {
 
@@ -58,6 +59,7 @@ export default function Calendar({
                marginBottom={1}
                width="100%"
             >
+            {/* Array of string days of the week */}
                {weekDays &&
                   weekDays.map((day, idx) => {
                      return (
@@ -85,21 +87,29 @@ export default function Calendar({
                height="100%"
                marginBottom="3%"
             >
-               {/* dates = matrix of week rows, day columns */}
+            {/* Array of date objs starting w/ first day of month */}
                {dates &&
+                  // Maps over array of week # ints (ex. 5 rows of data)
                   dates.map((week, idx) => {
-                     return (
-                        <Week
-                           week={week}
-                           key={idx}
-                           id={`week ${idx + 1}`}
-                           dates={dates}
-                           handleSelect={handleSelect}
-                           activeDate={activeDate}
-                           reset={resetActive}
-                        />
-                     )
-                  })}
+                        return (
+                           <Week
+                              week={week}
+                              key={idx}
+                              id={`week ${
+                                 idx + 1
+                              }`}
+                              dates={dates}
+                              handleSelect={
+                                 handleSelect
+                              }
+                              activeDate={
+                                 activeDate
+                              }
+                              today={today}
+                              reset={resetActive}
+                           />
+                        )
+                     })}
             </Box>
          </Box>
       </Paper>

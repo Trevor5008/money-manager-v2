@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model account {
+  id               Int           @id @default(autoincrement())
+  openingBalance   Decimal
+  balance          Decimal
+  income           income[]
+  expense          expense[]
+  transfersFrom    transfer[]    @relation("fromAccount")
+  transfersTo      transfer[]    @relation("toAccount")
+  debtPaymentsFrom debtPayment[] @relation("dpFromAccount")
+  debtPaymentsTo   debtPayment[] @relation("dpToAccount")
+}
+
+model year {
+  id     Int     @id @default(autoincrement())
+  year   Int
+  months month[]
+}
+
+model month {
+  id     Int    @id @default(autoincrement())
+  month  Int
+  yearId Int
+  year   year   @relation(fields: [yearId], references: [id], onDelete: Cascade)
+  dates  date[]
+}
+
+model date {
+  id           Int           @id @default(autoincrement())
+  date         Int
+  day          String
+  monthId      Int
+  month        month         @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  income       income[]
+  expenses     expense[]
+  transfers    transfer[]
+  debtPayments debtPayment[]
+}
+
+model income {
+  id          Int     @id @default(autoincrement())
+  amount      Decimal
+  accountId   Int
+  category    String
+  isRecurring Boolean
+  dateId      Int
+  date        date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
+  account     account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model expense {
+  id          Int     @id @default(autoincrement())
+  amount      Decimal
+  accountId   Int
+  category    String
+  isRecurring Boolean
+  dateId      Int
+  date        date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
+  account     account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+}
+
+model transfer {
+  id            Int     @id @default(autoincrement())
+  amount        Decimal
+  accountFromId Int
+  accountToId   Int
+  isRecurring   Boolean
+  dateId        Int
+  date          date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
+  accountFrom   account @relation("fromAccount", fields: [accountFromId], references: [id], onDelete: Cascade)
+  accountTo     account @relation("toAccount", fields: [accountToId], references: [id], onDelete: Cascade)
+}
+
+model debtPayment {
+  id            Int     @id @default(autoincrement())
+  amount        Decimal
+  accountFromId Int
+  accountToId   Int
+  isRecurring   Boolean
+  dateId        Int
+  date          date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
+  accountFrom   account @relation("dpFromAccount", fields: [accountFromId], references: [id], onDelete: Cascade)
+  accountTo     account @relation("dpToAccount", fields: [accountToId], references: [id], onDelete: Cascade)
+}
