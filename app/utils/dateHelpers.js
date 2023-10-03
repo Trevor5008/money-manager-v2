@@ -173,8 +173,9 @@ function splitArrIntoWeeks(dates) {
 function generateFullMonth(dates) {
    const firstDayIdx = weekDays.indexOf(dates[0].day)
    const lastDayIdx = weekDays.indexOf(dates[dates.length - 1].day)
+   console.log(lastDayIdx)
    const paddingStart = Array(firstDayIdx).fill({})
-   const paddingEnd = Array(lastDayIdx - 6).fill({})
+   const paddingEnd = Array(6 - lastDayIdx).fill({})
    const monthDatesArr = [...paddingStart, ...dates, ...paddingEnd]
    const monthsMatrix = splitArrIntoWeeks(monthDatesArr)
    return monthsMatrix
