@@ -33,7 +33,11 @@ export default function page() {
 
    useEffect(() => {
       // Retrieve current month dates from db
-      fetch("/api/get-year")
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = today.getMonth()
+      
+      fetch(`/api/get-year/${month}-${year}`)
          .then((res) => res.json())
          .then((res) => {
             const { year } = res.dates
