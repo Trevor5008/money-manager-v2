@@ -2,9 +2,8 @@ import { Box } from "@mui/material"
 import CalendarDay from "./CalendarDay"
 
 export default function Week({
-   today,
-   activeDate,
-   dates,
+   todayId,
+   activeDateId,
    handleSelect,
    reset,
    week
@@ -21,11 +20,10 @@ export default function Week({
                return (
                   <CalendarDay
                      key={`${date}-${idx}`}
-                     today={today}
+                     todayId={todayId}
                      date={date}
-                     dates={dates}
                      handleSelect={handleSelect}
-                     activeDate={activeDate}
+                     activeDateId={activeDateId}
                      reset={reset}
                   />
                )

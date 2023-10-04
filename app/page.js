@@ -1,9 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import {
-   months, // ex. "January"
-   generateFullMonth, // 2D array rows = weeks
-   getNumWeeks
+   generateFullMonth // 2D array rows = weeks
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
 import Notes from "./components/Notes"
@@ -12,7 +10,7 @@ import Accounts from "./components/Accounts"
 import AddItem from "./components/AddItem"
 import { Box, Paper, Stack } from "@mui/material"
 
-// TODO: Fix formatting of date objects, 
+// TODO: Fix formatting of date objects,
 // along with active vs today date
 
 export default function page() {
@@ -20,59 +18,97 @@ export default function page() {
       currentMonthDates,
       setCurrentMonthDates
    ] = useState([])
-   const [activeDate, setActiveDate] =
-      useState(null)
-   const [today, setToday] = useState(null)
-   const [currentYear, setCurrentYear] = useState(0)
-   const [currentMonth, setCurrentMonth] = useState(0)
+   const [activeDate, setActiveDate] = useState(null)
+   const [activeDateId, setActiveDateId] =
+      useState(0)
+   const [todayId, setTodayId] = useState(0)
+   const [currentYear, setCurrentYear] =
+      useState(0)
+   const [currentMonth, setCurrentMonth] =
+      useState(0)
    const [dataReady, setDataReady] =
       useState(false)
-   const [accountsView, setAccountsView] = useState(false)
-   const [transactionsView, setTransactionsView] = useState(false)
-   const [addItemsView, setAddItemsView] = useState(false)
+   const [accountsView, setAccountsView] =
+      useState(false)
+   const [transactionsView, setTransactionsView] =
+      useState(false)
+   const [addItemsView, setAddItemsView] =
+      useState(false)
 
    useEffect(() => {
-      // Retrieve current month dates from db
-      const today = new Date()
-      const year = today.getFullYear()
-      const month = today.getMonth()
-      
-      fetch(`/api/get-year/${month}-${year}`)
+      // get today's date on load
+      const today = new Date() // Full date string "Sun Jan 1st, ..."
+      const year = today.getFullYear() // Number value
+      const month = today.getMonth() // Number value
+
+      getCurrentMonthData(month, year, today)
+   }, [])
+
+   // Helper method for retrieving calendar for current month
+   async function getCurrentMonthData(
+      month,
+      year,
+      today
+   ) {
+      await fetch(
+         `/api/get-year/${month}-${year}`
+      )
          .then((res) => res.json())
          .then((res) => {
             const { year } = res.dates
+            // year is an array of months
             const { dates, month } =
                res.dates.months[0]
             setCurrentYear(year)
             setCurrentMonth(month)
-            const currentDates = generateFullMonth(dates)
+            const currentDates =
+               generateFullMonth(dates)
             setCurrentMonthDates(currentDates)
-            return dates
+            return { dates, year, month }
          })
-         .then((res) => {
-            const today = new Date().getDate()
-            const todayDate = res.find(
-               (date) => date.date === today
-            )
-            setActiveDate(todayDate)
-            setToday(todayDate)
+         .then(({ dates, month, year }) => {
+            const todaysDate = today.getDate()
+            const todayMonth = today.getMonth()
+            const todayYear = today.getFullYear()
+
+            if (
+               todayMonth === month &&
+               todayYear === year
+            ) {
+               const todayDate = dates.find(
+                  (date) =>
+                     date.date === todaysDate
+               )
+               setActiveDate(todayDate)
+               setActiveDateId(todayDate.id)
+               setTodayId(todayDate.id)
+            } 
          })
          .then(() => setDataReady(true))
-   }, [])
+   }
 
    function handleDateSelect(date) {
       if (date?.date) {
-         setActiveDate(date)
+         setActiveDateId(date.id)
       }
    }
 
    // Handles user selection of prev or next month
+   // TODO: Fix month selection bug - Calendar Day (is today)
    function prevMonth() {
-      console.log('prev month')
+      let month =
+         currentMonth > 0 ? currentMonth - 1 : 11
+      let year =
+         month === 11
+            ? currentYear - 1
+            : currentYear
+      getCurrentMonthData(month, year, new Date())
+      setCurrentMonth(month)
+      setCurrentYear(year)
    }
 
    function nextMonth() {
-      console.log('next month')
+      console.log("next month")
    }
 
    function resetActive() {
@@ -119,8 +155,8 @@ export default function page() {
       <main>
          <Box sx={{ display: "flex" }}>
             <Calendar
-               today={today}
-               activeDate={activeDate}
+               todayId={todayId}
+               activeDateId={activeDateId}
                dates={currentMonthDates}
                currentYear={currentYear}
                currentMonth={currentMonth}
@@ -147,14 +183,15 @@ export default function page() {
                >
                   {transactionsView ? (
                      <Notes
-                        activeDate={activeDate} // date object
-                        today={today} // date object
+                        activeDateId={activeDateId} // date object
+                        todayId={todayId} // date object
+                        activeDate={activeDate}
                      />
                   ) : accountsView ? (
                      <Accounts />
                   ) : addItemsView ? (
                      <AddItem
-                        activeDate={activeDate}
+                        activeDateId={activeDateId}
                         handleDatePick={
                            handleDatePick
                         }

@@ -4,14 +4,13 @@ import { Box, Typography } from "@mui/material"
 export default function CalendarDay({
    date,
    handleSelect,
-   activeDate,
-   today,
+   activeDateId,
+   todayId,
    reset
 }) {
    const [isViewed, setIsViewed] = useState(false)
-   const isActive = activeDate.date === date.date
-
-   const isToday = date.date === today.date
+   const isActive = date.id === activeDateId
+   const isToday = date.id === todayId
 
    function handleHover() {
       setIsViewed(true)

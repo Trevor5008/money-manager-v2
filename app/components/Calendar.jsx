@@ -10,8 +10,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import Week from "../components/Week"
 
 export default function Calendar({
-   today,
-   activeDate,
+   todayId,
+   activeDateId,
    dates,
    currentMonth,
    currentYear,
@@ -109,13 +109,13 @@ export default function Calendar({
                         <Week
                            week={week}
                            key={idx}
+                           todayId={todayId}
                            id={`week ${idx + 1}`}
                            dates={dates}
                            handleSelect={
                               handleSelect
                            }
-                           activeDate={activeDate}
-                           today={today}
+                           activeDateId={activeDateId}
                            reset={resetActive}
                         />
                      )
