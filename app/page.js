@@ -18,7 +18,8 @@ export default function page() {
       currentMonthDates,
       setCurrentMonthDates
    ] = useState([])
-   const [activeDate, setActiveDate] = useState(null)
+   const [activeDate, setActiveDate] =
+      useState(null)
    const [activeDateId, setActiveDateId] =
       useState(0)
    const [todayId, setTodayId] = useState(0)
@@ -82,7 +83,7 @@ export default function page() {
                setActiveDate(todayDate)
                setActiveDateId(todayDate.id)
                setTodayId(todayDate.id)
-            } 
+            }
          })
          .then(() => setDataReady(true))
    }
@@ -95,7 +96,6 @@ export default function page() {
    }
 
    // Handles user selection of prev or next month
-   // TODO: Fix month selection bug - Calendar Day (is today)
    function prevMonth() {
       let month =
          currentMonth > 0 ? currentMonth - 1 : 11
@@ -109,7 +109,15 @@ export default function page() {
    }
 
    function nextMonth() {
-      console.log("next month")
+      let month =
+         currentMonth < 11 ? currentMonth + 1 : 0
+      let year =
+         month === 0
+            ? currentYear + 1
+            : currentYear
+      getCurrentMonthData(month, year, new Date())
+      setCurrentMonth(month)
+      setCurrentYear(year)
    }
 
    function resetActive() {
@@ -184,7 +192,9 @@ export default function page() {
                >
                   {transactionsView ? (
                      <Notes
-                        activeDateId={activeDateId} // date object
+                        activeDateId={
+                           activeDateId
+                        } // date object
                         todayId={todayId} // date object
                         activeDate={activeDate}
                      />
@@ -192,7 +202,9 @@ export default function page() {
                      <Accounts />
                   ) : addItemsView ? (
                      <AddItem
-                        activeDateId={activeDateId}
+                        activeDateId={
+                           activeDateId
+                        }
                         handleDatePick={
                            handleDatePick
                         }
