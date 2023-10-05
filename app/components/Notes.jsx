@@ -18,7 +18,7 @@ export default function Notes({
 }) {
    const [heading, setHeading] = useState("")
    const [isReady, setIsReady] = useState(false)
-   console.log(activeDate)
+
    useEffect(() => {
       if (activeDateId && todayId) {
          if (
@@ -27,10 +27,9 @@ export default function Notes({
          ) {
             setHeading("Today")
          } else {
-            const date = activeDate
             let title = getLongName(activeDate?.day)
             title +=
-               " " + date + parseSuffix(date)
+               " " + activeDate.date + parseSuffix(activeDate)
             setHeading(title)
          }
       }

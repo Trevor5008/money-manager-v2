@@ -90,6 +90,7 @@ export default function page() {
    function handleDateSelect(date) {
       if (date?.date) {
          setActiveDateId(date.id)
+         setActiveDate(date)
       }
    }
 
