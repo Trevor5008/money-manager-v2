@@ -124,6 +124,14 @@ export default function page() {
       setActiveDate(today)
    }
 
+   // Reset calendar to present month
+   function goToCurrent() {
+      const today = new Date()
+      const month = today.getMonth()
+      const year = today.getFullYear()
+      getCurrentMonthData(month, year, today)
+   }
+
    function handleTabSelect(val) {
       if (val === 0) {
          setAccountsView(false)
@@ -173,6 +181,7 @@ export default function page() {
                handleSelect={handleDateSelect}
                prevMonth={prevMonth}
                nextMonth={nextMonth}
+               goToCurrent={goToCurrent}
             />
             {/* Side Panel: Transactions, Accounts, Add Item */}
             <Stack>

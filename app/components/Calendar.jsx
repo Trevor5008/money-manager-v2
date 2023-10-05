@@ -2,9 +2,13 @@ import {
    Box,
    Divider,
    Typography,
-   Paper
+   Paper,
+   Button
 } from "@mui/material"
-import { weekDays, months } from "../utils/dateHelpers"
+import {
+   weekDays,
+   months
+} from "../utils/dateHelpers"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import Week from "../components/Week"
@@ -19,7 +23,8 @@ export default function Calendar({
    handleSelect,
    prevMonth,
    nextMonth,
-   resetActive
+   resetActive,
+   goToCurrent
 }) {
    const month = months[currentMonth]
 
@@ -53,7 +58,8 @@ export default function Calendar({
                <ArrowBackIosIcon
                   onClick={prevMonth}
                   sx={{
-                     marginRight: 1
+                     position: "absolute",
+                     left: "10%"
                   }}
                />
                <Typography variant="h3">
@@ -63,7 +69,10 @@ export default function Calendar({
                </Typography>
                <ArrowForwardIosIcon
                   onClick={nextMonth}
-                  sx={{ marginLeft: 2 }}
+                  sx={{
+                     position: "absolute",
+                     right: "53%"
+                  }}
                />
             </Box>
             {/* Days of Week Header Row */}
@@ -115,12 +124,17 @@ export default function Calendar({
                            handleSelect={
                               handleSelect
                            }
-                           activeDateId={activeDateId}
+                           activeDateId={
+                              activeDateId
+                           }
                            reset={resetActive}
                         />
                      )
                   })}
             </Box>
+            <Button onClick={goToCurrent}>
+               Back To Current
+            </Button>
          </Box>
       </Paper>
    )
