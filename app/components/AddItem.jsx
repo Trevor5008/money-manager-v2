@@ -18,6 +18,8 @@ import {
 
 export default function AddItem({
    activeDate,
+   currentMonth,
+   currentYear,
    handleDatePick
 }) {
    const [itemType, setItemType] = useState("") // Expense, Income...
@@ -33,18 +35,17 @@ export default function AddItem({
       useState(0.00)
 
    useEffect(() => {
-      const year = activeDate?.year
-      let month = activeDate?.month
       let date = activeDate?.date
+      let month = currentMonth
 
       date =
          date / 10 < 1 ? `0${date}` : `${date}`
       month =
          month / 10 < 1 ? `0${month}` : `${month}`
 
-      // setDateString(
-      //    `${year.toString()}-${month}-${date}`
-      // )
+      setDateString(
+         `${currentYear.toString()}-${month}-${date}`
+      )
       
    }, [activeDate])
 
@@ -98,8 +99,24 @@ export default function AddItem({
          }
          */
 
-   function postItem(evt) {
+   async function postItem(evt) {
       evt.preventDefault()
+
+      // TODO: Add acccount name to schema (string)
+
+      /* {
+            {amount: decimal,
+            accountId,
+            category: string,
+            (subcategory?),
+            isRecurring: boolean,
+            dateId
+         }
+
+         Locate corresponding account
+         Locate corresponding date
+
+      */
 
       const itemObj = {
          date: activeDate,

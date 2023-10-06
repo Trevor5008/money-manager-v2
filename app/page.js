@@ -148,24 +148,30 @@ export default function page() {
       }
    }
 
-   function handleDatePick(evt) {
+   async function handleDatePick(evt) {
+      // evt.target.value = year-month-date
+
       const dateStrArr =
          evt.target.value.split("-")
       const month = parseInt(dateStrArr[1])
       const year = parseInt(dateStrArr[0])
       const date = parseInt(dateStrArr[2])
 
-      for (const week of dates) {
-         for (const dateObj of week) {
-            if (
-               dateObj?.date === date &&
-               dateObj?.month === month &&
-               dateObj?.year === year
-            ) {
-               setActiveDate(dateObj)
-            }
-         }
+      if (currentMonth !== month && currentYear !== year) {
+         await getCurrentMonthData(month, year, new Date())
+         setActiveDate()
       }
+      // for (const week of currentMonthDates) {
+      //    for (const dateObj of week) {
+      //       if (
+      //          dateObj?.date === date &&
+      //          dateObj?.month === month &&
+      //          dateObj?.year === year
+      //       ) {
+      //          setActiveDate(dateObj)
+      //       }
+      //    }
+      // }
    }
 
    return (
@@ -213,6 +219,15 @@ export default function page() {
                      <AddItem
                         activeDateId={
                            activeDateId
+                        }
+                        activeDate={
+                           activeDate
+                        }
+                        currentMonth={
+                           currentMonth
+                        }
+                        currentYear={
+                           currentYear
                         }
                         handleDatePick={
                            handleDatePick
