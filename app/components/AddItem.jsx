@@ -130,6 +130,7 @@ export default function AddItem({
          year: parseInt(year),
          date: parseInt(date),
          isRecurring,
+         itemType,
          account,
          amount: itemAmount,
          category

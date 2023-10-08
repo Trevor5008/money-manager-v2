@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 
 export async function POST(request){
     const payload = await request.json()
-    const { year, month, date } = payload.itemObj
+    const { category, year, month, date, account, itemType, amount } = payload.itemObj
     
 
     // Gather correct year id
@@ -38,6 +38,14 @@ export async function POST(request){
     })
     
     // TODO: Based on date id... add transaction (correct type)
-    
+    await prisma.expense.create({
+        data: {
+            amount,
+            accountId: 1,
+            category,
+            isRecurring: false,
+            dateId: dateData.id
+        }
+    })   
     // return NextResponse.json({dates})
 }
