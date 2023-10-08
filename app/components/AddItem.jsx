@@ -19,8 +19,7 @@ import {
 export default function AddItem({
    activeDate,
    currentMonth,
-   currentYear,
-   handleDatePick
+   currentYear
 }) {
    const [itemType, setItemType] = useState("") // Expense, Income...
    const [dateString, setDateString] =
@@ -36,7 +35,7 @@ export default function AddItem({
 
    useEffect(() => {
       let date = activeDate?.date
-      let month = currentMonth
+      let month = currentMonth + 1
 
       date =
          date / 10 < 1 ? `0${date}` : `${date}`
@@ -52,6 +51,10 @@ export default function AddItem({
    // Expense/Income/Transfer
    function handleTypeChange(evt) {
       setItemType(evt.target.value)
+   }
+
+   function changeDate(evt) {
+      setDateString(evt.target.value)
    }
 
    // TODO: Need to hook up
@@ -117,15 +120,28 @@ export default function AddItem({
          Locate corresponding date
 
       */
+      const dateStrArr = dateString.split('-')
+      const year = dateStrArr[0]
+      const month = dateStrArr[1]
+      const date = dateStrArr[2]
 
       const itemObj = {
-         date: activeDate,
+         month: parseInt(month),
+         year: parseInt(year),
+         date: parseInt(date),
          isRecurring,
          account,
          amount: itemAmount,
          category
       }
-      console.log(itemObj)
+
+      await fetch(`../api/add-transaction`, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+            },
+         body: JSON.stringify({ itemObj })
+      })
    }   
 
 
@@ -237,7 +253,7 @@ export default function AddItem({
                         id="item-date-input"
                         type="date"
                         value={dateString}
-                        onChange={handleDatePick}
+                        onChange={changeDate}
                      />
                   </Stack>
                   {/* Recurrence Toggle */}
