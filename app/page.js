@@ -88,6 +88,7 @@ export default function page() {
          .then(() => setDataReady(true))
    }
 
+   // Date selection from main calendar
    function handleDateSelect(date) {
       if (date?.date) {
          setActiveDateId(date.id)
@@ -148,26 +149,6 @@ export default function page() {
       }
    }
 
-   function handleDatePick(evt) {
-      const dateStrArr =
-         evt.target.value.split("-")
-      const month = parseInt(dateStrArr[1])
-      const year = parseInt(dateStrArr[0])
-      const date = parseInt(dateStrArr[2])
-
-      for (const week of dates) {
-         for (const dateObj of week) {
-            if (
-               dateObj?.date === date &&
-               dateObj?.month === month &&
-               dateObj?.year === year
-            ) {
-               setActiveDate(dateObj)
-            }
-         }
-      }
-   }
-
    return (
       <main>
          <Box sx={{ display: "flex" }}>
@@ -214,8 +195,14 @@ export default function page() {
                         activeDateId={
                            activeDateId
                         }
-                        handleDatePick={
-                           handleDatePick
+                        activeDate={
+                           activeDate
+                        }
+                        currentMonth={
+                           currentMonth
+                        }
+                        currentYear={
+                           currentYear
                         }
                      />
                   ) : null}

@@ -18,7 +18,8 @@ import {
 
 export default function AddItem({
    activeDate,
-   handleDatePick
+   currentMonth,
+   currentYear
 }) {
    const [itemType, setItemType] = useState("") // Expense, Income...
    const [dateString, setDateString] =
@@ -33,24 +34,27 @@ export default function AddItem({
       useState(0.00)
 
    useEffect(() => {
-      const year = activeDate?.year
-      let month = activeDate?.month
       let date = activeDate?.date
+      let month = currentMonth + 1
 
       date =
          date / 10 < 1 ? `0${date}` : `${date}`
       month =
          month / 10 < 1 ? `0${month}` : `${month}`
 
-      // setDateString(
-      //    `${year.toString()}-${month}-${date}`
-      // )
+      setDateString(
+         `${currentYear.toString()}-${month}-${date}`
+      )
       
    }, [activeDate])
 
    // Expense/Income/Transfer
    function handleTypeChange(evt) {
       setItemType(evt.target.value)
+   }
+
+   function changeDate(evt) {
+      setDateString(evt.target.value)
    }
 
    // TODO: Need to hook up
@@ -98,17 +102,45 @@ export default function AddItem({
          }
          */
 
-   function postItem(evt) {
+   async function postItem(evt) {
       evt.preventDefault()
+      // TODO: Add acccount name to schema (string)
+
+      /* {
+            {amount: decimal,
+            accountId,
+            category: string,
+            (subcategory?),
+            isRecurring: boolean,
+            dateId
+         }
+
+         Locate corresponding account
+         Locate corresponding date
+
+      */
+      const dateStrArr = dateString.split('-')
+      const year = dateStrArr[0]
+      const month = dateStrArr[1]
+      const date = dateStrArr[2]
 
       const itemObj = {
-         date: activeDate,
+         month: parseInt(month),
+         year: parseInt(year),
+         date: parseInt(date),
          isRecurring,
-         account,
+         itemType,
          amount: itemAmount,
          category
       }
-      console.log(itemObj)
+
+      await fetch(`../api/add-transaction`, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+            },
+         body: JSON.stringify({ itemObj })
+      })
    }   
 
 
@@ -166,6 +198,9 @@ export default function AddItem({
                      <MenuItem value="transfer">
                         Transfer
                      </MenuItem>
+                     <MenuItem value="debt-payment">
+                        Debt Payment
+                     </MenuItem>
                   </Select>
                </FormControl>
             </Box>
@@ -220,7 +255,7 @@ export default function AddItem({
                         id="item-date-input"
                         type="date"
                         value={dateString}
-                        onChange={handleDatePick}
+                        onChange={changeDate}
                      />
                   </Stack>
                   {/* Recurrence Toggle */}
@@ -392,7 +427,7 @@ export default function AddItem({
                         flex: 1
                      }}
                   >
-                     {/* <Select
+                     <Select
                         id="category-select"
                         value={category}
                         label="Category"
@@ -402,10 +437,10 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
-                        <ListSubheader onMouseOver={showSubCategories}>
+                        <ListSubheader /*onMouseOver={showSubCategories}*/>
                            Home
                         </ListSubheader>
-                        {showSubs && (
+                        {/* {showSubs && (
                            <Box>
                               <MenuItem value="home-rent">
                            Rent
@@ -420,7 +455,7 @@ export default function AddItem({
                            Moving
                         </MenuItem>
                            </Box>
-                        )}
+                        )} */}
                         <ListSubheader>
                            Food
                         </ListSubheader>
@@ -442,7 +477,7 @@ export default function AddItem({
                         <MenuItem value="car-repairs">
                            Repairs
                         </MenuItem>
-                     </Select> */}
+                     </Select>
                   </FormControl>
                </Box>
                {/* Amount */}
