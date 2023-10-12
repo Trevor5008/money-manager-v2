@@ -42,16 +42,13 @@ async function getDateId(year, month, date) {
 export async function POST(request) {
    const payload = await request.json()
    const {
-      category,
       year,
       month,
       date,
-      account,
       itemType,
       isRecurring,
       amount
    } = payload.itemObj
-   console.log(itemType)
 
    const dateId = await getDateId(year, month, date);
 
