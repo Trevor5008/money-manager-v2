@@ -104,7 +104,6 @@ export default function AddItem({
 
    async function postItem(evt) {
       evt.preventDefault()
-
       // TODO: Add acccount name to schema (string)
 
       /* {
@@ -131,7 +130,6 @@ export default function AddItem({
          date: parseInt(date),
          isRecurring,
          itemType,
-         account,
          amount: itemAmount,
          category
       }
@@ -199,6 +197,9 @@ export default function AddItem({
                      </MenuItem>
                      <MenuItem value="transfer">
                         Transfer
+                     </MenuItem>
+                     <MenuItem value="debt-payment">
+                        Debt Payment
                      </MenuItem>
                   </Select>
                </FormControl>
@@ -426,7 +427,7 @@ export default function AddItem({
                         flex: 1
                      }}
                   >
-                     {/* <Select
+                     <Select
                         id="category-select"
                         value={category}
                         label="Category"
@@ -436,10 +437,10 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
-                        <ListSubheader onMouseOver={showSubCategories}>
+                        <ListSubheader /*onMouseOver={showSubCategories}*/>
                            Home
                         </ListSubheader>
-                        {showSubs && (
+                        {/* {showSubs && (
                            <Box>
                               <MenuItem value="home-rent">
                            Rent
@@ -454,7 +455,7 @@ export default function AddItem({
                            Moving
                         </MenuItem>
                            </Box>
-                        )}
+                        )} */}
                         <ListSubheader>
                            Food
                         </ListSubheader>
@@ -476,7 +477,7 @@ export default function AddItem({
                         <MenuItem value="car-repairs">
                            Repairs
                         </MenuItem>
-                     </Select> */}
+                     </Select>
                   </FormControl>
                </Box>
                {/* Amount */}
