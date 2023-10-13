@@ -31,9 +31,13 @@ export default function AddItem({
    const [account, setAccount] = useState("")
    const [category, setCategory] = useState("")
    const [itemAmount, setItemAmount] =
-      useState(0.00)
+      useState(null)
 
    useEffect(() => {
+      setActiveDate()
+   }, [activeDate])
+
+   function setActiveDate() {
       let date = activeDate?.date
       let month = currentMonth + 1
 
@@ -45,8 +49,7 @@ export default function AddItem({
       setDateString(
          `${currentYear.toString()}-${month}-${date}`
       )
-      
-   }, [activeDate])
+   }
 
    // Expense/Income/Transfer
    function handleTypeChange(evt) {
@@ -88,23 +91,14 @@ export default function AddItem({
       setAccount("")
       setCategory("")
       setItemAmount("")
+      setActiveDate()
    }
-
-   /* 
-      Form should submit occurrence object:
-
-         occurrenceObj = {
-            date: date obj,
-            isRecurring: boolean,
-            account: integer idx,
-            amount: decimal,
-            category: string
-         }
-         */
 
    async function postItem(evt) {
       evt.preventDefault()
-      // TODO: Add acccount name to schema (string)
+      // TODO: Add to schema
+      //  * acccount name (string)
+      //  * account category (checking/savings/credit card/loan)
 
       /* {
             {amount: decimal,
