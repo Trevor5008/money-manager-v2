@@ -86,7 +86,6 @@ export default function AddItem({
    }
 
    function clearItemFlds() {
-      // TODO: Add date string reset to active date
       setItemType("")
       setIsRecurring(false)
       setAccount("")
