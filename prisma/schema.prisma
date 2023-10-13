@@ -10,8 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model accountCategory {
+  id              Int          @id @default(autoincrement())
+  category        String
+  account         account[]
+}
+
 model account {
   id               Int           @id @default(autoincrement())
+  name              String
+  accountCategoryId Int
+  accountCategory   accountCategory      @relation(fields: [accountCategoryId], references: [id], onDelete: Cascade)
   openingBalance   Decimal
   balance          Decimal
   income           income[]
@@ -48,11 +57,27 @@ model date {
   debtPayments debtPayment[]
 }
 
+model category {
+  id          Int         @id @default(autoincrement())
+  name        String
+  subCategories   subCategory[]
+}
+
+model subCategory {
+  id          Int         @id @default(autoincrement())
+  name        String
+  categoryId    Int
+  category      category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  income        income[]
+  expenses      expense[]
+}
+
 model income {
   id          Int     @id @default(autoincrement())
   amount      Decimal
   accountId   Int
-  category    String
+  subCategoryId   Int
+  subCategory   subCategory  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
   isRecurring Boolean
   dateId      Int
   date        date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
@@ -63,7 +88,8 @@ model expense {
   id          Int     @id @default(autoincrement())
   amount      Decimal
   accountId   Int
-  category    String
+  subCategoryId   Int
+  subCategory   subCategory  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
   isRecurring Boolean
   dateId      Int
   date        date    @relation(fields: [dateId], references: [id], onDelete: Cascade)

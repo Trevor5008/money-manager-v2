@@ -1,6 +1,16 @@
 -- CreateTable
+CREATE TABLE `accountCategory` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `category` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `account` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `accountCategoryId` INTEGER NOT NULL,
     `openingBalance` DECIMAL(65, 30) NOT NULL,
     `balance` DECIMAL(65, 30) NOT NULL,
 
@@ -35,11 +45,28 @@ CREATE TABLE `date` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `category` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `subCategory` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `categoryId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `income` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `amount` DECIMAL(65, 30) NOT NULL,
     `accountId` INTEGER NOT NULL,
-    `category` VARCHAR(191) NOT NULL,
+    `subCategoryId` INTEGER NOT NULL,
     `isRecurring` BOOLEAN NOT NULL,
     `dateId` INTEGER NOT NULL,
 
@@ -51,7 +78,7 @@ CREATE TABLE `expense` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `amount` DECIMAL(65, 30) NOT NULL,
     `accountId` INTEGER NOT NULL,
-    `category` VARCHAR(191) NOT NULL,
+    `subCategoryId` INTEGER NOT NULL,
     `isRecurring` BOOLEAN NOT NULL,
     `dateId` INTEGER NOT NULL,
 
@@ -83,16 +110,28 @@ CREATE TABLE `debtPayment` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
+ALTER TABLE `account` ADD CONSTRAINT `account_accountCategoryId_fkey` FOREIGN KEY (`accountCategoryId`) REFERENCES `accountCategory`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `month` ADD CONSTRAINT `month_yearId_fkey` FOREIGN KEY (`yearId`) REFERENCES `year`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `date` ADD CONSTRAINT `date_monthId_fkey` FOREIGN KEY (`monthId`) REFERENCES `month`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `subCategory` ADD CONSTRAINT `subCategory_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `category`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `income` ADD CONSTRAINT `income_subCategoryId_fkey` FOREIGN KEY (`subCategoryId`) REFERENCES `subCategory`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `income` ADD CONSTRAINT `income_dateId_fkey` FOREIGN KEY (`dateId`) REFERENCES `date`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `income` ADD CONSTRAINT `income_accountId_fkey` FOREIGN KEY (`accountId`) REFERENCES `account`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `expense` ADD CONSTRAINT `expense_subCategoryId_fkey` FOREIGN KEY (`subCategoryId`) REFERENCES `subCategory`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `expense` ADD CONSTRAINT `expense_dateId_fkey` FOREIGN KEY (`dateId`) REFERENCES `date`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
