@@ -4,7 +4,7 @@ import {
    generateFullMonth // 2D array rows = weeks
 } from "./utils/dateHelpers"
 import Calendar from "./components/Calendar"
-import Notes from "./components/Notes"
+import Transactions from "./components/Transactions"
 import CustomTabPanel from "./components/CustomTabPanel"
 import Accounts from "./components/Accounts"
 import AddItem from "./components/AddItem"
@@ -32,8 +32,6 @@ export default function page() {
    const [accountsView, setAccountsView] =
       useState(false)
    const [transactionsView, setTransactionsView] =
-      useState(false)
-   const [addItemsView, setAddItemsView] =
       useState(false)
 
    useEffect(() => {
@@ -134,19 +132,8 @@ export default function page() {
    }
 
    function handleTabSelect(val) {
-      if (val === 0) {
-         setAccountsView(false)
-         setTransactionsView(true)
-         setAddItemsView(false)
-      } else if (val === 1) {
-         setAccountsView(true)
-         setTransactionsView(false)
-         setAddItemsView(false)
-      } else {
-         setAccountsView(false)
-         setTransactionsView(false)
-         setAddItemsView(true)
-      }
+      setAccountsView(val === 0)
+      setTransactionsView(val === 1)
    }
 
    return (
@@ -181,7 +168,7 @@ export default function page() {
                   }}
                >
                   {transactionsView ? (
-                     <Notes
+                     <Transactions
                         activeDateId={
                            activeDateId
                         } // date object
@@ -190,21 +177,6 @@ export default function page() {
                      />
                   ) : accountsView ? (
                      <Accounts />
-                  ) : addItemsView ? (
-                     <AddItem
-                        activeDateId={
-                           activeDateId
-                        }
-                        activeDate={
-                           activeDate
-                        }
-                        currentMonth={
-                           currentMonth
-                        }
-                        currentYear={
-                           currentYear
-                        }
-                     />
                   ) : null}
                   {currentMonthDates &&
                      currentMonthDates.map(

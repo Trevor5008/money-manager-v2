@@ -11,7 +11,7 @@ import {
    getLongName
 } from "../utils/dateHelpers"
 
-export default function Notes({
+export default function Transactions({
    activeDate,
    activeDateId,
    todayId

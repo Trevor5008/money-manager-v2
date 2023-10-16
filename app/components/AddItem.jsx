@@ -81,7 +81,9 @@ export default function AddItem({
    }
 
    function handleAmountChange(evt) {
-      const inputValue = parseFloat(evt.target.value)
+      const inputValue = parseFloat(
+         evt.target.value
+      )
       setItemAmount(inputValue)
    }
 
@@ -113,7 +115,7 @@ export default function AddItem({
          Locate corresponding date
 
       */
-      const dateStrArr = dateString.split('-')
+      const dateStrArr = dateString.split("-")
       const year = dateStrArr[0]
       const month = dateStrArr[1]
       const date = dateStrArr[2]
@@ -129,14 +131,13 @@ export default function AddItem({
       }
 
       await fetch(`../api/add-transaction`, {
-         method: 'POST',
+         method: "POST",
          headers: {
-            'Content-Type': 'application/json'
-            },
+            "Content-Type": "application/json"
+         },
          body: JSON.stringify({ itemObj })
       })
-   }   
-
+   }
 
    return (
       <Stack
@@ -344,6 +345,33 @@ export default function AddItem({
                      </Stack>
                   </Stack>
                )}
+               {/* Amount */}
+               <Box
+                  display="flex"
+                  flex={1}
+                  paddingX={1}
+                  marginY={1}
+                  justifyContent="space-between"
+               >
+                  <InputLabel htmlFor="amount-input-fld">
+                     Amount:{" "}
+                  </InputLabel>
+                  <Input
+                     id="amount-input-fld"
+                     type="number"
+                     value={itemAmount}
+                     inputProps={{
+                        min: 0.0,
+                        step: 0.01
+                     }}
+                     onChange={handleAmountChange}
+                     startAdornment={
+                        <InputAdornment position="start">
+                           $
+                        </InputAdornment>
+                     }
+                  />
+               </Box>
                {/* Account Select*/}
                <Box
                   display="flex"
@@ -431,7 +459,8 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
-                        <ListSubheader /*onMouseOver={showSubCategories}*/>
+                        <ListSubheader /*onMouseOver={showSubCategories}*/
+                        >
                            Home
                         </ListSubheader>
                         {/* {showSubs && (
@@ -473,30 +502,6 @@ export default function AddItem({
                         </MenuItem>
                      </Select>
                   </FormControl>
-               </Box>
-               {/* Amount */}
-               <Box
-                  display="flex"
-                  flex={1}
-                  paddingX={1}
-                  marginY={1}
-                  justifyContent="space-between"
-               >
-                  <InputLabel htmlFor="amount-input-fld">
-                     Amount:{" "}
-                  </InputLabel>
-                  <Input
-                     id="amount-input-fld"
-                     type="number"
-                     value={itemAmount}
-                     inputProps={{ min: 0.00, step: 0.01 }}
-                     onChange={handleAmountChange}
-                     startAdornment={
-                        <InputAdornment position="start">
-                           $
-                        </InputAdornment>
-                     }
-                  />
                </Box>
             </Stack>
             {/* Form Submit */}
