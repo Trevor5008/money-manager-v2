@@ -149,9 +149,10 @@ export default function Transactions({
                      Expenses
                   </Typography>
                   {!showExpenseItems ? (
-                     <VisibilityOffOutlinedIcon
+                     <RemoveRedEyeOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -160,9 +161,10 @@ export default function Transactions({
                         }
                      />
                   ) : (
-                     <RemoveRedEyeOutlinedIcon
+                     <VisibilityOffOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -178,7 +180,8 @@ export default function Transactions({
                         )
                      }
                      sx={{
-                        marginLeft: 5
+                        position: "absolute",
+                        right: "25%"
                      }}
                   />
                </Box>
@@ -213,9 +216,10 @@ export default function Transactions({
                      Income
                   </Typography>
                   {!showIncomeItems ? (
-                     <VisibilityOffOutlinedIcon
+                     <RemoveRedEyeOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -224,9 +228,10 @@ export default function Transactions({
                         }
                      />
                   ) : (
-                     <RemoveRedEyeOutlinedIcon
+                     <VisibilityOffOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -242,7 +247,8 @@ export default function Transactions({
                         )
                      }
                      sx={{
-                        marginLeft: 5
+                        position: "absolute",
+                        right: "25%"
                      }}
                   />
                </Box>
@@ -277,9 +283,10 @@ export default function Transactions({
                      Transfers
                   </Typography>
                   {!showTransferItems ? (
-                     <VisibilityOffOutlinedIcon
+                     <RemoveRedEyeOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -290,7 +297,8 @@ export default function Transactions({
                   ) : (
                      <RemoveRedEyeOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -306,7 +314,8 @@ export default function Transactions({
                         )
                      }
                      sx={{
-                        marginLeft: 5
+                        position: "absolute",
+                        right: "25%"
                      }}
                   />
                </Box>
@@ -341,9 +350,10 @@ export default function Transactions({
                      Debt Payments
                   </Typography>
                   {!showDebtPayments ? (
-                     <VisibilityOffOutlinedIcon
+                     <RemoveRedEyeOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -352,9 +362,10 @@ export default function Transactions({
                         }
                      />
                   ) : (
-                     <RemoveRedEyeOutlinedIcon
+                     <VisibilityOffOutlinedIcon
                         sx={{
-                           marginLeft: 10
+                           position: "absolute",
+                           right: "20%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -370,7 +381,8 @@ export default function Transactions({
                         )
                      }
                      sx={{
-                        marginLeft: 5
+                        position: "absolute",
+                        right: "25%"
                      }}
                   />
                </Box>
