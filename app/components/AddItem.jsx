@@ -19,9 +19,11 @@ import {
 export default function AddItem({
    activeDate,
    currentMonth,
-   currentYear
+   currentYear,
+   transactionType,
+   handleHideForm
 }) {
-   const [itemType, setItemType] = useState("") // Expense, Income...
+   const [itemType, setItemType] = useState(transactionType) // Expense, Income...
    const [dateString, setDateString] =
       useState("") // Used for input text
    const [isRecurring, setIsRecurring] =
@@ -156,6 +158,8 @@ export default function AddItem({
             }}
             justifyContent="space-evenly"
          >
+            {/* Back button */}
+            <Button onClick={handleHideForm}>Back</Button>
             {/* Type Select */}
             <Box
                display="flex"

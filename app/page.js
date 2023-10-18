@@ -174,6 +174,8 @@ export default function page() {
                         } // date object
                         todayId={todayId} // date object
                         activeDate={activeDate}
+                        currentMonth={currentMonth}
+                        currentYear={currentYear}
                      />
                   ) : accountsView ? (
                      <Accounts />
