@@ -60,44 +60,46 @@ export default function Transactions({
       setIsReady(true)
    }, [activeDate])
 
+   // Display category transactions
    function handleShowItems(type) {
       switch (type) {
-         case "expenses":
+         case "expense":
             setShowExpenseItems(true)
             break
          case "income":
             setShowIncomeItems(true)
             break
-         case "transfers":
+         case "transfer":
             setShowTransferItems(true)
             break
-         case "debt-payments":
+         case "debt-payment":
             setShowDebtPayments(true)
             break
       }
    }
+   // Hide category transactions
    function handleHideItems(type) {
       switch (type) {
-         case "expenses":
+         case "expense":
             setShowExpenseItems(false)
             break
          case "income":
             setShowIncomeItems(false)
             break
-         case "transfers":
+         case "transfer":
             setShowTransferItems(false)
             break
-         case "debt-payments":
+         case "debt-payment":
             setShowDebtPayments(false)
             break
       }
    }
-
+   // Render add item form for specific category
    function handleShowAddForm(type) {
       setTransactionType(type)
       setShowAddForm(true)
    }
-
+   // Toggles off add item form, returns to category view
    function handleHideAddForm() {
       setTransactionType("")
       setShowAddForm(false)
@@ -156,7 +158,7 @@ export default function Transactions({
                         }}
                         onClick={() =>
                            handleShowItems(
-                              "expenses"
+                              "expense"
                            )
                         }
                      />
@@ -168,7 +170,7 @@ export default function Transactions({
                         }}
                         onClick={() =>
                            handleHideItems(
-                              "expenses"
+                              "expense"
                            )
                         }
                      />
@@ -176,7 +178,7 @@ export default function Transactions({
                   <ControlPointIcon
                      onClick={() =>
                         handleShowAddForm(
-                           "expenses"
+                           "expense"
                         )
                      }
                      sx={{
@@ -290,7 +292,7 @@ export default function Transactions({
                         }}
                         onClick={() =>
                            handleShowItems(
-                              "transfers"
+                              "transfer"
                            )
                         }
                      />
@@ -302,7 +304,7 @@ export default function Transactions({
                         }}
                         onClick={() =>
                            handleHideItems(
-                              "transfers"
+                              "transfer"
                            )
                         }
                      />
@@ -310,7 +312,7 @@ export default function Transactions({
                   <ControlPointIcon
                      onClick={() =>
                         handleShowAddForm(
-                           "transfers"
+                           "transfer"
                         )
                      }
                      sx={{
@@ -357,7 +359,7 @@ export default function Transactions({
                         }}
                         onClick={() =>
                            handleShowItems(
-                              "debt-payments"
+                              "debt-payment"
                            )
                         }
                      />
@@ -369,7 +371,7 @@ export default function Transactions({
                         }}
                         onClick={() =>
                            handleHideItems(
-                              "debt-payments"
+                              "debt-payment"
                            )
                         }
                      />
@@ -377,7 +379,7 @@ export default function Transactions({
                   <ControlPointIcon
                      onClick={() =>
                         handleShowAddForm(
-                           "debt-payments"
+                           "debt-payment"
                         )
                      }
                      sx={{

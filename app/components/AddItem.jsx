@@ -34,6 +34,7 @@ export default function AddItem({
    const [category, setCategory] = useState("")
    const [itemAmount, setItemAmount] =
       useState(null)
+   console.log(transactionType)
 
    useEffect(() => {
       setActiveDate()
