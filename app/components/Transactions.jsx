@@ -12,8 +12,8 @@ import {
 } from "../utils/dateHelpers"
 import AddItem from "./AddItem"
 import ControlPointIcon from "@mui/icons-material/ControlPoint"
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined"
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined"
 
 // TODO: Create Add Item button to render transaction form conditionally
 export default function Transactions({
@@ -117,7 +117,7 @@ export default function Transactions({
          paddingTop={1}
          flex={1}
       >
-         {/* Notes Header */}
+         {/* Header */}
          <Box
             id="date-header"
             padding={1}
@@ -130,7 +130,7 @@ export default function Transactions({
             </Typography>
          </Box>
          <Divider />
-         {/* Notes Body */}
+         {/* Body */}
          <Stack
             id="items-section"
             paddingX={2}
@@ -171,12 +171,16 @@ export default function Transactions({
                         }
                      />
                   )}
-                     <ControlPointIcon
-                        onClick={() => handleShowAddForm("expenses")}
-                        sx={{
-                           marginLeft: 5
-                        }}
-                     />
+                  <ControlPointIcon
+                     onClick={() =>
+                        handleShowAddForm(
+                           "expenses"
+                        )
+                     }
+                     sx={{
+                        marginLeft: 5
+                     }}
+                  />
                </Box>
                <Divider />
                {showExpenseItems ? (
@@ -201,71 +205,191 @@ export default function Transactions({
                marginY={3}
                marginX={2}
             >
-               <Typography variant="h6">
-                  Income
-               </Typography>
-               <Divider />
-               <Stack
-                  id="income-items"
-                  marginTop={2}
-                  marginLeft={2}
+               <Box
+                  display="flex"
+                  alignItems="center"
                >
-                  <Typography
-                     variant="body1"
-                     fontStyle="italic"
-                     color="grey"
-                  >
-                     No items today
+                  <Typography variant="h6">
+                     Income
                   </Typography>
-               </Stack>
+                  {!showIncomeItems ? (
+                     <VisibilityOffOutlinedIcon
+                        sx={{
+                           marginLeft: 10
+                        }}
+                        onClick={() =>
+                           handleShowItems(
+                              "income"
+                           )
+                        }
+                     />
+                  ) : (
+                     <RemoveRedEyeOutlinedIcon
+                        sx={{
+                           marginLeft: 10
+                        }}
+                        onClick={() =>
+                           handleHideItems(
+                              "income"
+                           )
+                        }
+                     />
+                  )}
+                  <ControlPointIcon
+                     onClick={() =>
+                        handleShowAddForm(
+                           "income"
+                        )
+                     }
+                     sx={{
+                        marginLeft: 5
+                     }}
+                  />
+               </Box>
+               <Divider />
+               {showIncomeItems ? (
+                  <Stack
+                     id="income-items"
+                     marginTop={2}
+                     marginLeft={2}
+                  >
+                     <Typography
+                        variant="body1"
+                        fontStyle="italic"
+                        color="grey"
+                     >
+                        No items today
+                     </Typography>
+                  </Stack>
+               ) : null}
             </Stack>
             {/* Transfers */}
             <Stack
-               id="expenses"
+               id="transfers"
                marginY={3}
                marginX={2}
             >
-               <Typography variant="h6">
-                  Transfers
-               </Typography>
-               <Divider />
-               <Stack
-                  id="transfer-items"
-                  marginTop={2}
-                  marginLeft={2}
+               <Box
+                  display="flex"
+                  alignItems="center"
                >
-                  <Typography
-                     variant="body1"
-                     fontStyle="italic"
-                     color="grey"
-                  >
-                     No items today
+                  <Typography variant="h6">
+                     Transfers
                   </Typography>
-               </Stack>
+                  {!showTransferItems ? (
+                     <VisibilityOffOutlinedIcon
+                        sx={{
+                           marginLeft: 10
+                        }}
+                        onClick={() =>
+                           handleShowItems(
+                              "transfers"
+                           )
+                        }
+                     />
+                  ) : (
+                     <RemoveRedEyeOutlinedIcon
+                        sx={{
+                           marginLeft: 10
+                        }}
+                        onClick={() =>
+                           handleHideItems(
+                              "transfers"
+                           )
+                        }
+                     />
+                  )}
+                  <ControlPointIcon
+                     onClick={() =>
+                        handleShowAddForm(
+                           "transfers"
+                        )
+                     }
+                     sx={{
+                        marginLeft: 5
+                     }}
+                  />
+               </Box>
+               <Divider />
+               {showTransferItems ? (
+                  <Stack
+                     id="transfer-items"
+                     marginTop={2}
+                     marginLeft={2}
+                  >
+                     <Typography
+                        variant="body1"
+                        fontStyle="italic"
+                        color="grey"
+                     >
+                        No items today
+                     </Typography>
+                  </Stack>
+               ) : null}
             </Stack>
             {/* Debt Payments */}
             <Stack
-               id="debt-payments"
+               id="income"
                marginY={3}
                marginX={2}
             >
-               <Typography variant="h6">
-                  Debt Payments
-               </Typography>
-               <Divider />
-               <Stack
-                  id="debt-payment-items"
-                  marginTop={2}
-                  marginLeft={2}
+               <Box
+                  display="flex"
+                  alignItems="center"
                >
-                  <Typography
-                     variant="body1"
-                     fontStyle="italic"
-                     color="grey"
-                  >
-                     No items today
+                  <Typography variant="h6">
+                     Debt Payments
                   </Typography>
-               </Stack>
+                  {!showDebtPayments ? (
+                     <VisibilityOffOutlinedIcon
+                        sx={{
+                           marginLeft: 10
+                        }}
+                        onClick={() =>
+                           handleShowItems(
+                              "debt-payments"
+                           )
+                        }
+                     />
+                  ) : (
+                     <RemoveRedEyeOutlinedIcon
+                        sx={{
+                           marginLeft: 10
+                        }}
+                        onClick={() =>
+                           handleHideItems(
+                              "debt-payments"
+                           )
+                        }
+                     />
+                  )}
+                  <ControlPointIcon
+                     onClick={() =>
+                        handleShowAddForm(
+                           "debt-payments"
+                        )
+                     }
+                     sx={{
+                        marginLeft: 5
+                     }}
+                  />
+               </Box>
+               <Divider />
+               {showDebtPayments ? (
+                  <Stack
+                     id="debt-pay-items"
+                     marginTop={2}
+                     marginLeft={2}
+                  >
+                     <Typography
+                        variant="body1"
+                        fontStyle="italic"
+                        color="grey"
+                     >
+                        No items today
+                     </Typography>
+                  </Stack>
+               ) : null}
             </Stack>
          </Stack>
       </Stack>
