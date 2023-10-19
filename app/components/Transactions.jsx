@@ -154,7 +154,7 @@ export default function Transactions({
                      <RemoveRedEyeOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -166,7 +166,7 @@ export default function Transactions({
                      <VisibilityOffOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -183,7 +183,7 @@ export default function Transactions({
                      }
                      sx={{
                         position: "absolute",
-                        right: "25%"
+                        right: "20%"
                      }}
                   />
                </Box>
@@ -221,7 +221,7 @@ export default function Transactions({
                      <RemoveRedEyeOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -233,7 +233,7 @@ export default function Transactions({
                      <VisibilityOffOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -250,7 +250,7 @@ export default function Transactions({
                      }
                      sx={{
                         position: "absolute",
-                        right: "25%"
+                        right: "20%"
                      }}
                   />
                </Box>
@@ -288,7 +288,7 @@ export default function Transactions({
                      <RemoveRedEyeOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -300,7 +300,7 @@ export default function Transactions({
                      <RemoveRedEyeOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -317,7 +317,7 @@ export default function Transactions({
                      }
                      sx={{
                         position: "absolute",
-                        right: "25%"
+                        right: "20%"
                      }}
                   />
                </Box>
@@ -355,7 +355,7 @@ export default function Transactions({
                      <RemoveRedEyeOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleShowItems(
@@ -367,7 +367,7 @@ export default function Transactions({
                      <VisibilityOffOutlinedIcon
                         sx={{
                            position: "absolute",
-                           right: "20%"
+                           right: "25%"
                         }}
                         onClick={() =>
                            handleHideItems(
@@ -384,7 +384,7 @@ export default function Transactions({
                      }
                      sx={{
                         position: "absolute",
-                        right: "25%"
+                        right: "20%"
                      }}
                   />
                </Box>

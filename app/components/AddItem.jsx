@@ -23,7 +23,9 @@ export default function AddItem({
    transactionType,
    handleHideForm
 }) {
-   const [itemType, setItemType] = useState(transactionType) // Expense, Income...
+   const [itemType, setItemType] = useState(
+      transactionType
+   ) // Expense, Income...
    const [dateString, setDateString] =
       useState("") // Used for input text
    const [isRecurring, setIsRecurring] =
@@ -33,7 +35,7 @@ export default function AddItem({
    const [account, setAccount] = useState("")
    const [category, setCategory] = useState("")
    const [itemAmount, setItemAmount] =
-      useState(null)
+      useState("")
    console.log(transactionType)
 
    useEffect(() => {
@@ -155,28 +157,29 @@ export default function AddItem({
             display="flex"
             sx={{
                marginBottom: 2,
-               marginLeft: 2
+               marginX: 2
             }}
-            justifyContent="space-evenly"
+            justifyContent="space-between"
          >
             {/* Back button */}
-            <Button onClick={handleHideForm}>Back</Button>
+            <Button onClick={handleHideForm} flex={1}>
+               Back
+            </Button>
             {/* Type Select */}
             <Box
                display="flex"
-               flex={1}
-               paddingLeft={1}
+               flex={1.5}
+               justifyContent="center"
+               alignItems="center"
             >
                <InputLabel
                   sx={{
-                     alignSelf: "center",
-                     flex: 1
+                     marginRight: 2
                   }}
                >
                   Type:{" "}
                </InputLabel>
                <FormControl
-                  sx={{ marginLeft: 1, flex: 1 }}
                >
                   <Select
                      labelId="demo-simple-select-label"
@@ -205,19 +208,9 @@ export default function AddItem({
                </FormControl>
             </Box>
             {/* Clear Button */}
-            <Box
-               flex={1}
-               display="flex"
-               justifyContent="flex-end"
-               paddingRight={1}
-            >
-               <Button
-                  variant="standard"
-                  onClick={clearItemFlds}
-               >
-                  Clear
-               </Button>
-            </Box>
+            <Button onClick={clearItemFlds} sx={{ marginLeft: 6 }}>
+               Clear
+            </Button>
          </Box>
          <Divider />
          {/* Add Item Form */}
