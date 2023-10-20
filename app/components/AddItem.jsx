@@ -32,13 +32,18 @@ export default function AddItem({
       useState(false) // Flag for add'l settings
    const [periodicity, setPeriodicity] =
       useState("")
-   const [categories, setCategories] = useState([])
-   const [subCategories, setSubCategories] = useState([])
+   const [categories, setCategories] = useState(
+      []
+   )
+   const [subCategories, setSubCategories] =
+      useState([])
    const [account, setAccount] = useState("")
    const [category, setCategory] = useState("")
+   const [subCategory, setSubCategory] = useState("")
    const [itemAmount, setItemAmount] =
       useState("")
-   const [dataReady, setDataReady] = useState(false)
+   const [dataReady, setDataReady] =
+      useState(false)
 
    useEffect(() => {
       setActiveDate()
@@ -47,10 +52,10 @@ export default function AddItem({
 
    async function loadCategories() {
       await fetch("../../api/get-categories")
-         .then(res => res.json())
-         .then(res => {
+         .then((res) => res.json())
+         .then((res) => {
             const cats = []
-            res.categories.map(cat => {
+            res.categories.map((cat) => {
                cats.push(cat.name)
             })
             setCategories(cats)
@@ -101,8 +106,20 @@ export default function AddItem({
       loadSubCategories(categorySelected)
    }
 
+   function subCategorySelect(evt) {
+      const subCategorySelected = evt.target.value
+      setSubCategory(subCategorySelected)
+   }
+
    async function loadSubCategories(category) {
-      await fetch('../../api/get-subcategories/' + category)
+      await fetch(
+         "../../api/get-subcategories/" + category
+      )
+         .then((res) => res.json())
+         .then((res) => {
+            console.log(res.subCats)
+            setSubCategories(res.subCats)
+         })
    }
 
    function handleAmountChange(evt) {
@@ -182,7 +199,10 @@ export default function AddItem({
             justifyContent="space-between"
          >
             {/* Back button */}
-            <Button onClick={handleHideForm} flex={1}>
+            <Button
+               onClick={handleHideForm}
+               flex={1}
+            >
                Back
             </Button>
             {/* Type Select */}
@@ -231,7 +251,10 @@ export default function AddItem({
                </FormControl>
             </Box>
             {/* Clear Button */}
-            <Button onClick={clearItemFlds} sx={{ marginLeft: 6 }}>
+            <Button
+               onClick={clearItemFlds}
+               sx={{ marginLeft: 6 }}
+            >
                Clear
             </Button>
          </Box>
@@ -393,7 +416,7 @@ export default function AddItem({
                      }
                   />
                </Box>
-               {/* Account Select*/}
+               {/* Account Select */}
                <Box
                   display="flex"
                   flex={1}
@@ -480,14 +503,65 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
-                        {categories.map(category => {
-                           return (
-                              <MenuItem value={category.toLowerCase()}>
-                                 {category}
-                              </MenuItem>
-                           )
-                        })}
-                        
+                        {categories.map(
+                           (category) => {
+                              return (
+                                 <MenuItem
+                                    value={category.toLowerCase()}
+                                 >
+                                    {category}
+                                 </MenuItem>
+                              )
+                           }
+                        )}
+                     </Select>
+                  </FormControl>
+               </Box>
+               {/* SubCategory Select */}
+               <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  paddingX={1}
+                  marginY={1}
+               >
+                  <InputLabel
+                     sx={{
+                        alignSelf: "center",
+                        flex: 1
+                     }}
+                  >
+                     Subcategory:{" "}
+                  </InputLabel>
+                  <FormControl
+                     sx={{
+                        marginLeft: 1,
+                        flex: 1
+                     }}
+                  >
+                     <Select
+                        id="subcategory-select"
+                        value={subCategory}
+                        label="Subcategory"
+                        onChange={subCategorySelect}
+                        variant="standard"
+                        sx={{
+                           paddingX: 1
+                        }}
+                     >
+                        {subCategories.map(
+                           (category) => {
+                              console.log(
+                                 category
+                              )
+                              return (
+                                 <MenuItem
+                                    value={category.toLowerCase()}
+                                 >
+                                    {category}
+                                 </MenuItem>
+                              )
+                           }
+                        )}
                      </Select>
                   </FormControl>
                </Box>

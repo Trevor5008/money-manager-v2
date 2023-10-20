@@ -15,5 +15,9 @@ export async function GET(request, { params }) {
         where: { categoryId },
         select: { name: true }
     })
-    console.log(subCategories)
+    const subCats = subCategories.map(category => {
+        return category.name
+    })
+    console.log(subCats)
+    return NextResponse.json({ subCats })
 }
