@@ -32,15 +32,30 @@ export default function AddItem({
       useState(false) // Flag for add'l settings
    const [periodicity, setPeriodicity] =
       useState("")
+   const [categories, setCategories] = useState([])
+   const [subCategories, setSubCategories] = useState([])
    const [account, setAccount] = useState("")
    const [category, setCategory] = useState("")
    const [itemAmount, setItemAmount] =
       useState("")
-   console.log(transactionType)
+   const [dataReady, setDataReady] = useState(false)
 
    useEffect(() => {
       setActiveDate()
+      loadCategories()
    }, [activeDate])
+
+   async function loadCategories() {
+      await fetch("../../api/get-categories")
+         .then(res => res.json())
+         .then(res => {
+            const cats = []
+            res.categories.map(cat => {
+               cats.push(cat.name)
+            })
+            setCategories(cats)
+         })
+   }
 
    function setActiveDate() {
       let date = activeDate?.date
@@ -83,6 +98,11 @@ export default function AddItem({
    function categorySelect(evt) {
       const categorySelected = evt.target.value
       setCategory(categorySelected)
+      loadSubCategories(categorySelected)
+   }
+
+   async function loadSubCategories(category) {
+      await fetch('../../api/get-subcategories/' + category)
    }
 
    function handleAmountChange(evt) {
@@ -174,12 +194,15 @@ export default function AddItem({
             >
                <InputLabel
                   sx={{
-                     marginRight: 2
+                     marginRight: 1
                   }}
                >
                   Type:{" "}
                </InputLabel>
                <FormControl
+                  sx={{
+                     marginLeft: 1
+                  }}
                >
                   <Select
                      labelId="demo-simple-select-label"
@@ -457,47 +480,14 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
-                        <ListSubheader /*onMouseOver={showSubCategories}*/
-                        >
-                           Home
-                        </ListSubheader>
-                        {/* {showSubs && (
-                           <Box>
-                              <MenuItem value="home-rent">
-                           Rent
-                        </MenuItem>
-                        <MenuItem value="home-goods">
-                           Goods
-                        </MenuItem>
-                        <MenuItem value="home-appliances">
-                           Appliances
-                        </MenuItem>
-                        <MenuItem value="home-moving">
-                           Moving
-                        </MenuItem>
-                           </Box>
-                        )} */}
-                        <ListSubheader>
-                           Food
-                        </ListSubheader>
-                        <MenuItem value="food-groceries">
-                           Groceries
-                        </MenuItem>
-                        <MenuItem value="food-dining">
-                           Dining
-                        </MenuItem>
-                        <ListSubheader>
-                           Car
-                        </ListSubheader>
-                        <MenuItem value="car-gas">
-                           Gas
-                        </MenuItem>
-                        <MenuItem value="car-maintenance">
-                           Maintenance
-                        </MenuItem>
-                        <MenuItem value="car-repairs">
-                           Repairs
-                        </MenuItem>
+                        {categories.map(category => {
+                           return (
+                              <MenuItem value={category.toLowerCase()}>
+                                 {category}
+                              </MenuItem>
+                           )
+                        })}
+                        
                      </Select>
                   </FormControl>
                </Box>

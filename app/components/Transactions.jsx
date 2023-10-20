@@ -117,7 +117,7 @@ export default function Transactions({
       <Stack
          id="notes"
          paddingTop={1}
-         flex={1}
+         width='100%'
       >
          {/* Header */}
          <Box
