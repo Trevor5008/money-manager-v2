@@ -32,16 +32,19 @@ export default function AddItem({
       useState(false) // Flag for add'l settings
    const [periodicity, setPeriodicity] =
       useState("")
+   // Expense, Income items
+   const [account, setAccount] = useState("")
    const [categories, setCategories] = useState(
       []
    )
-   const [subCategories, setSubCategories] =
-      useState([])
-   const [account, setAccount] = useState("")
+   const [subCategories, setSubCategories] = useState([])
    const [category, setCategory] = useState("")
    const [subCategory, setSubCategory] = useState("")
    const [itemAmount, setItemAmount] =
       useState("")
+   // Transfer, Debt Payment items
+   const [accountFrom, setAccountFrom] = useState("")
+   const [accountTo, setAccountTo] = useState("")
    const [dataReady, setDataReady] =
       useState(false)
 
@@ -95,6 +98,7 @@ export default function AddItem({
       setIsRecurring(selection)
    }
 
+   // Item Handlers
    function accountSelect(evt) {
       const accountSelected = evt.target.value
       setAccount(accountSelected)
@@ -121,6 +125,9 @@ export default function AddItem({
             setSubCategories(res.subCats)
          })
    }
+
+   // Transfer Handlers
+
 
    function handleAmountChange(evt) {
       const inputValue = parseFloat(
@@ -169,8 +176,22 @@ export default function AddItem({
          isRecurring,
          itemType,
          amount: itemAmount,
-         category
+         account,
+         subCategory
       }
+
+      /*
+       const transferObj = {
+         month: parseInt(month),
+         year: parseInt(year),
+         date: parseInt(date),
+         isRecurring,
+         accountFrom,
+         accountTo,
+         amount: itemAmount,
+         itemType
+       }
+      */
 
       await fetch(`../api/add-transaction`, {
          method: "POST",
