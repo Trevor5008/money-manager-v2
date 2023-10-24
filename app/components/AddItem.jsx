@@ -15,6 +15,8 @@ import {
    ListSubheader,
    InputAdornment
 } from "@mui/material"
+import ItemForm from "./ItemForm"
+import TransferForm from "./TransferForm"
 
 export default function AddItem({
    activeDate,
@@ -25,7 +27,12 @@ export default function AddItem({
 }) {
    const [itemType, setItemType] = useState(
       transactionType
-   ) // Expense, Income...
+   )
+   const [isTransfer, setIsTransfer] = useState(
+      transactionType === "transfer" ||
+         transactionType === "debt-payment"
+   )
+   // Expense, Income...
    const [dateString, setDateString] =
       useState("") // Used for input text
    const [isRecurring, setIsRecurring] =
@@ -37,13 +44,16 @@ export default function AddItem({
    const [categories, setCategories] = useState(
       []
    )
-   const [subCategories, setSubCategories] = useState([])
+   const [subCategories, setSubCategories] =
+      useState([])
    const [category, setCategory] = useState("")
-   const [subCategory, setSubCategory] = useState("")
+   const [subCategory, setSubCategory] =
+      useState("")
    const [itemAmount, setItemAmount] =
       useState("")
    // Transfer, Debt Payment items
-   const [accountFrom, setAccountFrom] = useState("")
+   const [accountFrom, setAccountFrom] =
+      useState("")
    const [accountTo, setAccountTo] = useState("")
    const [dataReady, setDataReady] =
       useState(false)
@@ -104,6 +114,16 @@ export default function AddItem({
       setAccount(accountSelected)
    }
 
+   function accountFromSelect(evt) {
+      const accountSelected = evt.target.value
+      setAccountFrom(accountSelected)
+   }
+
+   function accountToSelect(evt) {
+      const accountSelected = evt.target.value
+      setAccountTo(accountSelected)
+   }
+
    function categorySelect(evt) {
       const categorySelected = evt.target.value
       setCategory(categorySelected)
@@ -128,7 +148,6 @@ export default function AddItem({
 
    // Transfer Handlers
 
-
    function handleAmountChange(evt) {
       const inputValue = parseFloat(
          evt.target.value
@@ -137,7 +156,6 @@ export default function AddItem({
    }
 
    function clearItemFlds() {
-      setItemType("")
       setIsRecurring(false)
       setAccount("")
       setCategory("")
@@ -147,28 +165,13 @@ export default function AddItem({
 
    async function postItem(evt) {
       evt.preventDefault()
-      // TODO: Add to schema
-      //  * acccount name (string)
-      //  * account category (checking/savings/credit card/loan)
 
-      /* {
-            {amount: decimal,
-            accountId,
-            category: string,
-            (subcategory?),
-            isRecurring: boolean,
-            dateId
-         }
-
-         Locate corresponding account
-         Locate corresponding date
-
-      */
       const dateStrArr = dateString.split("-")
       const year = dateStrArr[0]
       const month = dateStrArr[1]
       const date = dateStrArr[2]
 
+      if (!isTransfer) {
       const itemObj = {
          month: parseInt(month),
          year: parseInt(year),
@@ -179,8 +182,15 @@ export default function AddItem({
          account,
          subCategory
       }
+      await fetch(`../api/add-transaction`, {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json"
+         },
+         body: JSON.stringify({ itemObj })
+      })
+   } else {
 
-      /*
        const transferObj = {
          month: parseInt(month),
          year: parseInt(year),
@@ -190,16 +200,17 @@ export default function AddItem({
          accountTo,
          amount: itemAmount,
          itemType
-       }
-      */
-
-      await fetch(`../api/add-transaction`, {
+       } 
+       await fetch(`../api/add-transfer`, {
          method: "POST",
          headers: {
             "Content-Type": "application/json"
          },
-         body: JSON.stringify({ itemObj })
+         body: JSON.stringify({ transferObj })
       })
+
+      }
+      
    }
 
    return (
@@ -280,330 +291,45 @@ export default function AddItem({
             </Button>
          </Box>
          <Divider />
-         {/* Add Item Form */}
-         <form
-            onSubmit={postItem}
-            style={{
-               display: "flex",
-               flexDirection: "column",
-               justifyContent: "space-between",
-               flex: 1
-            }}
-         >
-            {/* Form Sections */}
-            <Stack>
-               {/* Date Settings */}
-               <Box
-                  id="add-item-date"
-                  display="flex"
-                  alignItems="space-between"
-                  justifyContent="space-between"
-                  paddingX={2}
-                  marginTop={2}
-               >
-                  {/* Date Input Section */}
-                  <Stack
-                     direction="row"
-                     justifyContent="space-between"
-                     flex={1}
-                     alignItems="center"
-                  >
-                     <InputLabel htmlFor="item-date-input">
-                        Date:{" "}
-                     </InputLabel>
-                     <Input
-                        id="item-date-input"
-                        type="date"
-                        value={dateString}
-                        onChange={changeDate}
-                     />
-                  </Stack>
-                  {/* Recurrence Toggle */}
-                  <Stack
-                     direction="row"
-                     alignItems="center"
-                     justifyContent="space-evenly"
-                     flex={1}
-                  >
-                     <Typography marginRight={1}>
-                        {isRecurring
-                           ? "Recurring"
-                           : "One-time"}
-                     </Typography>
-                     <Switch
-                        onChange={
-                           handleRecurrence
-                        }
-                        checked={isRecurring}
-                     />
-                  </Stack>
-               </Box>
-               {/* Conditional Recurrence Details */}
-               {/* TODO: Figure out how to disable non-relative re-occurrence dates */}
-               {isRecurring && (
-                  <Stack marginTop={2}>
-                     {/* Periodicity Select */}
-                     <Stack
-                        direction="row"
-                        alignItems="flex-start"
-                        justifyContent="space-between"
-                        paddingX={2}
-                     >
-                        <InputLabel
-                           sx={{
-                              flex: 1
-                           }}
-                           htmlFor="periodicity-select"
-                        >
-                           Occurs:{" "}
-                        </InputLabel>
-                        <Select
-                           id="periodicity-select"
-                           value={""}
-                           label="Occurs: "
-                           onChange={
-                              changePeriodicity
-                           }
-                           variant="standard"
-                           sx={{
-                              paddingLeft: 1,
-                              flex: 1
-                           }}
-                        >
-                           <MenuItem value="daily">
-                              Daily
-                           </MenuItem>
-                           <MenuItem value="weekly">
-                              Weekly
-                           </MenuItem>
-                           <MenuItem value="monthly">
-                              Monthly
-                           </MenuItem>
-                           <MenuItem value="yearly">
-                              Yearly
-                           </MenuItem>
-                           <MenuItem value="custom">
-                              Custom
-                           </MenuItem>
-                        </Select>
-                     </Stack>
-                     {/* End Date Select */}
-                     <Stack
-                        direction="row"
-                        flex={1}
-                        alignItems="center"
-                        justifyContent="space-between"
-                        marginTop={1}
-                        paddingX={2}
-                     >
-                        <InputLabel htmlFor="item-end-date-input">
-                           End Date:{" "}
-                        </InputLabel>
-                        <Input
-                           id="item-end-date-input"
-                           type="date"
-                           value={dateString}
-                           onChange={
-                              handleDatePick
-                           }
-                        />
-                     </Stack>
-                  </Stack>
-               )}
-               {/* Amount */}
-               <Box
-                  display="flex"
-                  flex={1}
-                  paddingX={1}
-                  marginY={1}
-                  justifyContent="space-between"
-               >
-                  <InputLabel htmlFor="amount-input-fld">
-                     Amount:{" "}
-                  </InputLabel>
-                  <Input
-                     id="amount-input-fld"
-                     type="number"
-                     value={itemAmount}
-                     inputProps={{
-                        min: 0.0,
-                        step: 0.01
-                     }}
-                     onChange={handleAmountChange}
-                     startAdornment={
-                        <InputAdornment position="start">
-                           $
-                        </InputAdornment>
-                     }
-                  />
-               </Box>
-               {/* Account Select */}
-               <Box
-                  display="flex"
-                  flex={1}
-                  paddingX={1}
-                  marginY={1}
-               >
-                  <InputLabel
-                     sx={{
-                        alignSelf: "center",
-                        flex: 1
-                     }}
-                  >
-                     Account:{" "}
-                  </InputLabel>
-                  <FormControl
-                     sx={{
-                        marginLeft: 1,
-                        flex: 1
-                     }}
-                  >
-                     <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={account}
-                        label="Type"
-                        onChange={accountSelect}
-                        variant="standard"
-                        sx={{
-                           paddingLeft: 1
-                        }}
-                     >
-                        <ListSubheader>
-                           Payment Accounts
-                        </ListSubheader>
-                        <MenuItem value="wells-fargo-checking">
-                           Wells Fargo Checking
-                        </MenuItem>
-                        <MenuItem value="pnc-wallet">
-                           PNC Wallet
-                        </MenuItem>
-                        <ListSubheader>
-                           Credit Cards
-                        </ListSubheader>
-                        <MenuItem value="chase-amazon">
-                           Chase Amazon
-                        </MenuItem>
-                        <MenuItem value="chase-freedom">
-                           Chase Freedom
-                        </MenuItem>
-                        <MenuItem value="pnc-core">
-                           PNC Core
-                        </MenuItem>
-                     </Select>
-                  </FormControl>
-               </Box>
-               {/* Category Select */}
-               <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  paddingX={1}
-                  marginY={1}
-               >
-                  <InputLabel
-                     sx={{
-                        alignSelf: "center",
-                        flex: 1
-                     }}
-                  >
-                     Category:{" "}
-                  </InputLabel>
-                  <FormControl
-                     sx={{
-                        marginLeft: 1,
-                        flex: 1
-                     }}
-                  >
-                     <Select
-                        id="category-select"
-                        value={category}
-                        label="Category"
-                        onChange={categorySelect}
-                        variant="standard"
-                        sx={{
-                           paddingX: 1
-                        }}
-                     >
-                        {categories.map(
-                           (category) => {
-                              return (
-                                 <MenuItem
-                                    value={category.toLowerCase()}
-                                 >
-                                    {category}
-                                 </MenuItem>
-                              )
-                           }
-                        )}
-                     </Select>
-                  </FormControl>
-               </Box>
-               {/* SubCategory Select */}
-               <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  paddingX={1}
-                  marginY={1}
-               >
-                  <InputLabel
-                     sx={{
-                        alignSelf: "center",
-                        flex: 1
-                     }}
-                  >
-                     Subcategory:{" "}
-                  </InputLabel>
-                  <FormControl
-                     sx={{
-                        marginLeft: 1,
-                        flex: 1
-                     }}
-                  >
-                     <Select
-                        id="subcategory-select"
-                        value={subCategory}
-                        label="Subcategory"
-                        onChange={subCategorySelect}
-                        variant="standard"
-                        sx={{
-                           paddingX: 1
-                        }}
-                     >
-                        {subCategories.map(
-                           (category) => {
-                              console.log(
-                                 category
-                              )
-                              return (
-                                 <MenuItem
-                                    value={category.toLowerCase()}
-                                 >
-                                    {category}
-                                 </MenuItem>
-                              )
-                           }
-                        )}
-                     </Select>
-                  </FormControl>
-               </Box>
-            </Stack>
-            {/* Form Submit */}
-            <Stack>
-               <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-               >
-                  {/* Conditionally render item type */}
-                  <Button
-                     type="submit"
-                     variant="filled"
-                  >
-                     Add {itemType}
-                  </Button>
-               </Box>
-            </Stack>
-         </form>
+         {!isTransfer ? (
+            <ItemForm
+               postItem={postItem}
+               dateString={dateString}
+               changeDate={changeDate}
+               changePeriodicity={
+                  changePeriodicity
+               }
+               isRecurring={isRecurring}
+               handleRecurrence={handleRecurrence}
+               itemAmount={itemAmount}
+               handleAmountChange={handleAmountChange}
+               account={account}
+               accountSelect={accountSelect}
+               category={category}
+               categorySelect={categorySelect}
+               subCategory={subCategory}
+               subCategorySelect={subCategorySelect}
+               categories={categories}
+               subCategories={subCategories}
+               itemType={itemType}
+            />
+         ) : (
+            <TransferForm
+               postItem={postItem}
+               dateString={dateString}
+               changeDate={changeDate}
+               changePeriodicity={changePeriodicity}
+               isRecurring={isRecurring}
+               handleRecurrence={handleRecurrence}
+               itemAmount={itemAmount}
+               handleAmountChange={handleAmountChange}
+               accountFrom={accountFrom}
+               accountTo={accountTo}
+               accountFromSelect={accountFromSelect}
+               accountToSelect={accountToSelect}
+               itemType={itemType}
+            />
+         )}
       </Stack>
    )
 }
