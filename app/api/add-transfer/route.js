@@ -48,8 +48,10 @@ export async function POST(request) {
       date,
       itemType,
       isRecurring,
-      amount
-   } = payload.itemObj
+      amount,
+      accountFrom,
+      accountTo
+   } = payload.transferObj
 
    const dateId = await getDateId(year, month, date);
 
@@ -60,18 +62,18 @@ export async function POST(request) {
    } 
 
    switch(itemType) {
-      case 'expense':
-         data.accountId = 1
-         data.subCategory = subcCategory
-         await prisma.expense.create({ data })
+      case 'transfer':
+         data.accountFromId = 1
+         data.accountToId = 2
+         await prisma.transfer.create({ data })
          break
-      case 'income':
-         data.accountId = 1
-         data.subCategory = subCategory
-         await prisma.income.create({ data })
+      case 'debt-payment':
+         data.accountFromId = 1
+         data.accountToId = 2
+         await prisma.debtPayment.create({ data })
          break
       default:
-         console.log('Unrecognized transaction type')
+         console.log('Unrecognized transfer type')
    }
    // TODO: Based on date id... add transaction (correct type)
    

@@ -16,6 +16,7 @@ import {
    InputAdornment
 } from "@mui/material"
 import ItemForm from "./ItemForm"
+import TransferForm from "./TransferForm"
 
 export default function AddItem({
    activeDate,
@@ -113,6 +114,16 @@ export default function AddItem({
       setAccount(accountSelected)
    }
 
+   function accountFromSelect(evt) {
+      const accountSelected = evt.target.value
+      setAccountFrom(accountSelected)
+   }
+
+   function accountToSelect(evt) {
+      const accountSelected = evt.target.value
+      setAccountTo(accountSelected)
+   }
+
    function categorySelect(evt) {
       const categorySelected = evt.target.value
       setCategory(categorySelected)
@@ -145,7 +156,6 @@ export default function AddItem({
    }
 
    function clearItemFlds() {
-      setItemType("")
       setIsRecurring(false)
       setAccount("")
       setCategory("")
@@ -155,28 +165,13 @@ export default function AddItem({
 
    async function postItem(evt) {
       evt.preventDefault()
-      // TODO: Add to schema
-      //  * acccount name (string)
-      //  * account category (checking/savings/credit card/loan)
 
-      /* {
-            {amount: decimal,
-            accountId,
-            category: string,
-            (subcategory?),
-            isRecurring: boolean,
-            dateId
-         }
-
-         Locate corresponding account
-         Locate corresponding date
-
-      */
       const dateStrArr = dateString.split("-")
       const year = dateStrArr[0]
       const month = dateStrArr[1]
       const date = dateStrArr[2]
 
+      if (!isTransfer) {
       const itemObj = {
          month: parseInt(month),
          year: parseInt(year),
@@ -187,8 +182,15 @@ export default function AddItem({
          account,
          subCategory
       }
+      await fetch(`../api/add-transaction`, {
+         method: "POST",
+         headers: {
+            "Content-Type": "application/json"
+         },
+         body: JSON.stringify({ itemObj })
+      })
+   } else {
 
-      /*
        const transferObj = {
          month: parseInt(month),
          year: parseInt(year),
@@ -198,16 +200,17 @@ export default function AddItem({
          accountTo,
          amount: itemAmount,
          itemType
-       }
-      */
-
-      await fetch(`../api/add-transaction`, {
+       } 
+       await fetch(`../api/add-transfer`, {
          method: "POST",
          headers: {
             "Content-Type": "application/json"
          },
-         body: JSON.stringify({ itemObj })
+         body: JSON.stringify({ transferObj })
       })
+
+      }
+      
    }
 
    return (
@@ -310,7 +313,23 @@ export default function AddItem({
                subCategories={subCategories}
                itemType={itemType}
             />
-         ) : null}
+         ) : (
+            <TransferForm
+               postItem={postItem}
+               dateString={dateString}
+               changeDate={changeDate}
+               changePeriodicity={changePeriodicity}
+               isRecurring={isRecurring}
+               handleRecurrence={handleRecurrence}
+               itemAmount={itemAmount}
+               handleAmountChange={handleAmountChange}
+               accountFrom={accountFrom}
+               accountTo={accountTo}
+               accountFromSelect={accountFromSelect}
+               accountToSelect={accountToSelect}
+               itemType={itemType}
+            />
+         )}
       </Stack>
    )
 }

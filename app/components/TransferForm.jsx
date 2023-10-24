@@ -15,7 +15,7 @@ import {
    InputAdornment
 } from "@mui/material"
 
-export default function ItemForm({
+export default function TransferForm({
    postItem,
    dateString,
    changeDate,
@@ -24,14 +24,10 @@ export default function ItemForm({
    handleRecurrence,
    itemAmount,
    handleAmountChange,
-   account,
-   accountSelect,
-   category,
-   categorySelect,
-   subCategory,
-   subCategorySelect,
-   categories,
-   subCategories,
+   accountFrom,
+   accountTo,
+   accountFromSelect,
+   accountToSelect,
    itemType
 }) {
    return (
@@ -160,7 +156,7 @@ export default function ItemForm({
                   </Stack>
                </Stack>
             )}
-            {/* Account Select */}
+            {/* Account From Select */}
             <Box
                display="flex"
                flex={1}
@@ -173,7 +169,7 @@ export default function ItemForm({
                      flex: 1
                   }}
                >
-                  Account:{" "}
+                  Account From:{" "}
                </InputLabel>
                <FormControl
                   sx={{
@@ -184,9 +180,9 @@ export default function ItemForm({
                   <Select
                      labelId="demo-simple-select-label"
                      id="demo-simple-select"
-                     value={account}
+                     value={accountFrom}
                      label="Type"
-                     onChange={accountSelect}
+                     onChange={accountFromSelect}
                      variant="standard"
                      sx={{
                         paddingLeft: 1
@@ -216,10 +212,10 @@ export default function ItemForm({
                   </Select>
                </FormControl>
             </Box>
-            {/* Category Select */}
+            {/* Account To Select */}
             <Box
                display="flex"
-               justifyContent="space-between"
+               flex={1}
                paddingX={1}
                marginY={1}
             >
@@ -229,7 +225,7 @@ export default function ItemForm({
                      flex: 1
                   }}
                >
-                  Category:{" "}
+                  Account To:{" "}
                </InputLabel>
                <FormControl
                   sx={{
@@ -238,72 +234,37 @@ export default function ItemForm({
                   }}
                >
                   <Select
-                     id="category-select"
-                     value={category}
-                     label="Category"
-                     onChange={categorySelect}
+                     labelId="demo-simple-select-label"
+                     id="demo-simple-select"
+                     value={accountTo}
+                     label="Type"
+                     onChange={accountToSelect}
                      variant="standard"
                      sx={{
-                        paddingX: 1
+                        paddingLeft: 1
                      }}
                   >
-                     {categories.map(
-                        (category) => {
-                           return (
-                              <MenuItem
-                                 value={category.toLowerCase()}
-                              >
-                                 {category}
-                              </MenuItem>
-                           )
-                        }
-                     )}
-                  </Select>
-               </FormControl>
-            </Box>
-            {/* SubCategory Select */}
-            <Box
-               display="flex"
-               justifyContent="space-between"
-               paddingX={1}
-               marginY={1}
-            >
-               <InputLabel
-                  sx={{
-                     alignSelf: "center",
-                     flex: 1
-                  }}
-               >
-                  Subcategory:{" "}
-               </InputLabel>
-               <FormControl
-                  sx={{
-                     marginLeft: 1,
-                     flex: 1
-                  }}
-               >
-                  <Select
-                     id="subcategory-select"
-                     value={subCategory}
-                     label="Subcategory"
-                     onChange={subCategorySelect}
-                     variant="standard"
-                     sx={{
-                        paddingX: 1
-                     }}
-                  >
-                     {subCategories.map(
-                        (category) => {
-                           console.log(category)
-                           return (
-                              <MenuItem
-                                 value={category.toLowerCase()}
-                              >
-                                 {category}
-                              </MenuItem>
-                           )
-                        }
-                     )}
+                     <ListSubheader>
+                        Payment Accounts
+                     </ListSubheader>
+                     <MenuItem value="wells-fargo-checking">
+                        Wells Fargo Checking
+                     </MenuItem>
+                     <MenuItem value="pnc-wallet">
+                        PNC Wallet
+                     </MenuItem>
+                     <ListSubheader>
+                        Credit Cards
+                     </ListSubheader>
+                     <MenuItem value="chase-amazon">
+                        Chase Amazon
+                     </MenuItem>
+                     <MenuItem value="chase-freedom">
+                        Chase Freedom
+                     </MenuItem>
+                     <MenuItem value="pnc-core">
+                        PNC Core
+                     </MenuItem>
                   </Select>
                </FormControl>
             </Box>
