@@ -7,6 +7,7 @@ export default function BasicTabs({
 }) {
    const [value, setValue] = useState(0)
 
+   // Value is passed up to page to determine Notes view
    const handleChange = (evt, newValue) => {
       setValue(newValue)
    }
@@ -23,14 +24,14 @@ export default function BasicTabs({
                borderColor: "divider"
             }}
          >
+            {/* Tab values are indexed order, 1st = 0 */}
             <Tabs
                value={value}
                onChange={handleChange}
                aria-label="basic tabs example"
             >
-               <Tab label="Transactions" />
                <Tab label="Accounts" />
-               <Tab label="Add Item" />
+               <Tab label="Transactions" />
             </Tabs>
          </Box>
       </Box>

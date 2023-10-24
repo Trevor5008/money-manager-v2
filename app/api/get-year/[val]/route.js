@@ -24,5 +24,5 @@ export async function GET(request, { params }){
             }
         }
     })
-    return NextResponse.json({dates})
+    return NextResponse.json({ dates })
 }

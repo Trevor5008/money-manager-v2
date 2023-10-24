@@ -19,23 +19,51 @@ import {
 export default function AddItem({
    activeDate,
    currentMonth,
-   currentYear
+   currentYear,
+   transactionType,
+   handleHideForm
 }) {
-   const [itemType, setItemType] = useState("") // Expense, Income...
+   const [itemType, setItemType] = useState(
+      transactionType
+   ) // Expense, Income...
    const [dateString, setDateString] =
       useState("") // Used for input text
    const [isRecurring, setIsRecurring] =
       useState(false) // Flag for add'l settings
    const [periodicity, setPeriodicity] =
       useState("")
+   // Expense, Income items
    const [account, setAccount] = useState("")
+   const [categories, setCategories] = useState(
+      []
+   )
+   const [subCategories, setSubCategories] = useState([])
    const [category, setCategory] = useState("")
+   const [subCategory, setSubCategory] = useState("")
    const [itemAmount, setItemAmount] =
-      useState(null)
+      useState("")
+   // Transfer, Debt Payment items
+   const [accountFrom, setAccountFrom] = useState("")
+   const [accountTo, setAccountTo] = useState("")
+   const [dataReady, setDataReady] =
+      useState(false)
 
    useEffect(() => {
       setActiveDate()
+      loadCategories()
    }, [activeDate])
+
+   async function loadCategories() {
+      await fetch("../../api/get-categories")
+         .then((res) => res.json())
+         .then((res) => {
+            const cats = []
+            res.categories.map((cat) => {
+               cats.push(cat.name)
+            })
+            setCategories(cats)
+         })
+   }
 
    function setActiveDate() {
       let date = activeDate?.date
@@ -70,6 +98,7 @@ export default function AddItem({
       setIsRecurring(selection)
    }
 
+   // Item Handlers
    function accountSelect(evt) {
       const accountSelected = evt.target.value
       setAccount(accountSelected)
@@ -78,10 +107,32 @@ export default function AddItem({
    function categorySelect(evt) {
       const categorySelected = evt.target.value
       setCategory(categorySelected)
+      loadSubCategories(categorySelected)
    }
 
+   function subCategorySelect(evt) {
+      const subCategorySelected = evt.target.value
+      setSubCategory(subCategorySelected)
+   }
+
+   async function loadSubCategories(category) {
+      await fetch(
+         "../../api/get-subcategories/" + category
+      )
+         .then((res) => res.json())
+         .then((res) => {
+            console.log(res.subCats)
+            setSubCategories(res.subCats)
+         })
+   }
+
+   // Transfer Handlers
+
+
    function handleAmountChange(evt) {
-      const inputValue = parseFloat(evt.target.value)
+      const inputValue = parseFloat(
+         evt.target.value
+      )
       setItemAmount(inputValue)
    }
 
@@ -113,7 +164,7 @@ export default function AddItem({
          Locate corresponding date
 
       */
-      const dateStrArr = dateString.split('-')
+      const dateStrArr = dateString.split("-")
       const year = dateStrArr[0]
       const month = dateStrArr[1]
       const date = dateStrArr[2]
@@ -125,18 +176,31 @@ export default function AddItem({
          isRecurring,
          itemType,
          amount: itemAmount,
-         category
+         account,
+         subCategory
       }
 
+      /*
+       const transferObj = {
+         month: parseInt(month),
+         year: parseInt(year),
+         date: parseInt(date),
+         isRecurring,
+         accountFrom,
+         accountTo,
+         amount: itemAmount,
+         itemType
+       }
+      */
+
       await fetch(`../api/add-transaction`, {
-         method: 'POST',
+         method: "POST",
          headers: {
-            'Content-Type': 'application/json'
-            },
+            "Content-Type": "application/json"
+         },
          body: JSON.stringify({ itemObj })
       })
-   }   
-
+   }
 
    return (
       <Stack
@@ -151,26 +215,35 @@ export default function AddItem({
             display="flex"
             sx={{
                marginBottom: 2,
-               marginLeft: 2
+               marginX: 2
             }}
-            justifyContent="space-evenly"
+            justifyContent="space-between"
          >
+            {/* Back button */}
+            <Button
+               onClick={handleHideForm}
+               flex={1}
+            >
+               Back
+            </Button>
             {/* Type Select */}
             <Box
                display="flex"
-               flex={1}
-               paddingLeft={1}
+               flex={1.5}
+               justifyContent="center"
+               alignItems="center"
             >
                <InputLabel
                   sx={{
-                     alignSelf: "center",
-                     flex: 1
+                     marginRight: 1
                   }}
                >
                   Type:{" "}
                </InputLabel>
                <FormControl
-                  sx={{ marginLeft: 1, flex: 1 }}
+                  sx={{
+                     marginLeft: 1
+                  }}
                >
                   <Select
                      labelId="demo-simple-select-label"
@@ -199,19 +272,12 @@ export default function AddItem({
                </FormControl>
             </Box>
             {/* Clear Button */}
-            <Box
-               flex={1}
-               display="flex"
-               justifyContent="flex-end"
-               paddingRight={1}
+            <Button
+               onClick={clearItemFlds}
+               sx={{ marginLeft: 6 }}
             >
-               <Button
-                  variant="standard"
-                  onClick={clearItemFlds}
-               >
-                  Clear
-               </Button>
-            </Box>
+               Clear
+            </Button>
          </Box>
          <Divider />
          {/* Add Item Form */}
@@ -344,7 +410,34 @@ export default function AddItem({
                      </Stack>
                   </Stack>
                )}
-               {/* Account Select*/}
+               {/* Amount */}
+               <Box
+                  display="flex"
+                  flex={1}
+                  paddingX={1}
+                  marginY={1}
+                  justifyContent="space-between"
+               >
+                  <InputLabel htmlFor="amount-input-fld">
+                     Amount:{" "}
+                  </InputLabel>
+                  <Input
+                     id="amount-input-fld"
+                     type="number"
+                     value={itemAmount}
+                     inputProps={{
+                        min: 0.0,
+                        step: 0.01
+                     }}
+                     onChange={handleAmountChange}
+                     startAdornment={
+                        <InputAdornment position="start">
+                           $
+                        </InputAdornment>
+                     }
+                  />
+               </Box>
+               {/* Account Select */}
                <Box
                   display="flex"
                   flex={1}
@@ -431,72 +524,67 @@ export default function AddItem({
                            paddingX: 1
                         }}
                      >
-                        <ListSubheader /*onMouseOver={showSubCategories}*/>
-                           Home
-                        </ListSubheader>
-                        {/* {showSubs && (
-                           <Box>
-                              <MenuItem value="home-rent">
-                           Rent
-                        </MenuItem>
-                        <MenuItem value="home-goods">
-                           Goods
-                        </MenuItem>
-                        <MenuItem value="home-appliances">
-                           Appliances
-                        </MenuItem>
-                        <MenuItem value="home-moving">
-                           Moving
-                        </MenuItem>
-                           </Box>
-                        )} */}
-                        <ListSubheader>
-                           Food
-                        </ListSubheader>
-                        <MenuItem value="food-groceries">
-                           Groceries
-                        </MenuItem>
-                        <MenuItem value="food-dining">
-                           Dining
-                        </MenuItem>
-                        <ListSubheader>
-                           Car
-                        </ListSubheader>
-                        <MenuItem value="car-gas">
-                           Gas
-                        </MenuItem>
-                        <MenuItem value="car-maintenance">
-                           Maintenance
-                        </MenuItem>
-                        <MenuItem value="car-repairs">
-                           Repairs
-                        </MenuItem>
+                        {categories.map(
+                           (category) => {
+                              return (
+                                 <MenuItem
+                                    value={category.toLowerCase()}
+                                 >
+                                    {category}
+                                 </MenuItem>
+                              )
+                           }
+                        )}
                      </Select>
                   </FormControl>
                </Box>
-               {/* Amount */}
+               {/* SubCategory Select */}
                <Box
                   display="flex"
-                  flex={1}
+                  justifyContent="space-between"
                   paddingX={1}
                   marginY={1}
-                  justifyContent="space-between"
                >
-                  <InputLabel htmlFor="amount-input-fld">
-                     Amount:{" "}
+                  <InputLabel
+                     sx={{
+                        alignSelf: "center",
+                        flex: 1
+                     }}
+                  >
+                     Subcategory:{" "}
                   </InputLabel>
-                  <Input
-                     id="amount-input-fld"
-                     type="number"
-                     value={itemAmount}
-                     inputProps={{ min: 0.00, step: 0.01 }}
-                     onChange={handleAmountChange}
-                     startAdornment={
-                        <InputAdornment position="start">
-                           $
-                        </InputAdornment>
-                     }
-                  />
+                  <FormControl
+                     sx={{
+                        marginLeft: 1,
+                        flex: 1
+                     }}
+                  >
+                     <Select
+                        id="subcategory-select"
+                        value={subCategory}
+                        label="Subcategory"
+                        onChange={subCategorySelect}
+                        variant="standard"
+                        sx={{
+                           paddingX: 1
+                        }}
+                     >
+                        {subCategories.map(
+                           (category) => {
+                              console.log(
+                                 category
+                              )
+                              return (
+                                 <MenuItem
+                                    value={category.toLowerCase()}
+                                 >
+                                    {category}
+                                 </MenuItem>
+                              )
+                           }
+                        )}
+                     </Select>
+                  </FormControl>
                </Box>
             </Stack>
             {/* Form Submit */}
