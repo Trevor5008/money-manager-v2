@@ -30,23 +30,6 @@ async function main() {
             },
         });
     }
-    await prisma.expense.create({
-        data: {
-            amount: 1.23,
-        category: "Fuel",
-        isRecurring: false,
-        date: {
-            connect: {
-                id: 1
-            }
-        },
-        account: {
-            connect: {
-                id: 1
-            }
-        }
-        }
-    })
 }
 
 
