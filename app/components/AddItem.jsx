@@ -141,7 +141,6 @@ export default function AddItem({
       )
          .then((res) => res.json())
          .then((res) => {
-            console.log(res.subCats)
             setSubCategories(res.subCats)
          })
    }
@@ -190,7 +189,7 @@ export default function AddItem({
          body: JSON.stringify({ itemObj })
       })
    } else {
-
+      // Transfer/Debt Payment
        const transferObj = {
          month: parseInt(month),
          year: parseInt(year),

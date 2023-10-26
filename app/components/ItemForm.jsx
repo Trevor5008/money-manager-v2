@@ -195,7 +195,7 @@ export default function ItemForm({
                      <ListSubheader>
                         Payment Accounts
                      </ListSubheader>
-                     <MenuItem value="wells-fargo-checking">
+                     <MenuItem value="wells-fargo">
                         Wells Fargo Checking
                      </MenuItem>
                      <MenuItem value="pnc-wallet">

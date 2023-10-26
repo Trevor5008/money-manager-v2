@@ -39,6 +39,24 @@ async function getDateId(year, month, date) {
    return id
 }
 
+// Helper method to retrieve account id
+async function getAccountId(name) {
+   const { id } = await prisma.account.findFirst({
+      where: { name },
+      select: { id: true }
+   })
+   return id
+}
+
+// Helper method to retrieve subcategory id
+async function getSubCategoryId(subCat) {
+   const { id } = await prisma.subCategory.findFirst({
+      where: { name: subCat },
+      select: { id: true }
+   })
+   return id
+}
+
 // TODO: Fix mapping of required fields
 export async function POST(request) {
    const payload = await request.json()
@@ -48,32 +66,34 @@ export async function POST(request) {
       date,
       itemType,
       isRecurring,
-      amount
+      amount,
+      account,
+      subCategory
    } = payload.itemObj
 
    const dateId = await getDateId(year, month, date);
+   const accountId = await getAccountId(account);
+   const subCategoryId = await getSubCategoryId(subCategory)
 
    const data = {
       amount,
       isRecurring,
-      dateId
+      dateId, 
+      subCategoryId,
+      accountId
    } 
+
 
    switch(itemType) {
       case 'expense':
-         data.accountId = 1
-         data.subCategory = subcCategory
          await prisma.expense.create({ data })
          break
       case 'income':
-         data.accountId = 1
-         data.subCategory = subCategory
          await prisma.income.create({ data })
          break
       default:
          console.log('Unrecognized transaction type')
    }
-   // TODO: Based on date id... add transaction (correct type)
    
    // return NextResponse.json({dates})
 }
