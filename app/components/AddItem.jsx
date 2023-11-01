@@ -91,7 +91,13 @@ export default function AddItem({
 
    // Expense/Income/Transfer
    function handleTypeChange(evt) {
-      setItemType(evt.target.value)
+      const type = evt.target.value
+      setItemType(type)
+      if (type === 'expense' || type === 'income') {
+         setIsTransfer(false)
+      } else {
+         setIsTransfer(true)
+      }
    }
 
    function changeDate(evt) {

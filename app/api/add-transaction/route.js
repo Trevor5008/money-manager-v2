@@ -56,6 +56,29 @@ async function getSubCategoryId(subCat) {
    })
    return id
 }
+// Income adjustment
+async function addAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         increment: {
+            amount: amount
+         }
+      }
+   })
+}
+// Expense adjustment
+async function deductAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         decrement: {
+            amount: amount
+         }
+      }
+   })
+}
+
 
 // TODO: Fix mapping of required fields
 export async function POST(request) {
@@ -86,9 +109,11 @@ export async function POST(request) {
 
    switch(itemType) {
       case 'expense':
+         await deductAmount(amount, accountId)
          await prisma.expense.create({ data })
          break
       case 'income':
+         await addAmount(amount, accountId)
          await prisma.income.create({ data })
          break
       default:

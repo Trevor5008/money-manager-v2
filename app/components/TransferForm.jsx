@@ -191,10 +191,10 @@ export default function TransferForm({
                      <ListSubheader>
                         Payment Accounts
                      </ListSubheader>
-                     <MenuItem value="wells-fargo-checking">
+                     <MenuItem value="wells fargo">
                         Wells Fargo Checking
                      </MenuItem>
-                     <MenuItem value="pnc-wallet">
+                     <MenuItem value="pnc wallet">
                         PNC Wallet
                      </MenuItem>
                      <ListSubheader>
@@ -247,10 +247,10 @@ export default function TransferForm({
                      <ListSubheader>
                         Payment Accounts
                      </ListSubheader>
-                     <MenuItem value="wells-fargo-checking">
+                     <MenuItem value="wells fargo">
                         Wells Fargo Checking
                      </MenuItem>
-                     <MenuItem value="pnc-wallet">
+                     <MenuItem value="pnc wallet">
                         PNC Wallet
                      </MenuItem>
                      <ListSubheader>

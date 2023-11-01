@@ -25,6 +25,7 @@ async function getDateId(year, month, date) {
          }
       }
    )
+   
    // Retrieve date id  
    const { id } = await prisma.date.findFirst({
       where: {
@@ -39,12 +40,25 @@ async function getDateId(year, month, date) {
    return id
 }
 
+async function getAccountId(account) {
+   const { id } = await prisma.account.findFirst({
+      where: {
+         name: account
+      },
+      select: {
+         id: true
+      }
+   })
+
+   return id
+}
+
 // TODO: Fix mapping of required fields
 export async function POST(request) {
    const payload = await request.json()
    const {
       year,
-      month,
+      month,   
       date,
       itemType,
       isRecurring,
@@ -55,6 +69,9 @@ export async function POST(request) {
 
    const dateId = await getDateId(year, month, date);
 
+   const accountFromId = await getAccountId(accountFrom)
+   const accountToId = await getAccountId(accountTo)
+
    const data = {
       amount,
       isRecurring,
@@ -63,13 +80,13 @@ export async function POST(request) {
 
    switch(itemType) {
       case 'transfer':
-         data.accountFromId = 1
-         data.accountToId = 2
+         data.accountFromId = accountFromId
+         data.accountToId = accountToId
          await prisma.transfer.create({ data })
          break
       case 'debt-payment':
-         data.accountFromId = 1
-         data.accountToId = 2
+         data.accountFromId = accountFromId
+         data.accountToId = accountToId
          await prisma.debtPayment.create({ data })
          break
       default:
