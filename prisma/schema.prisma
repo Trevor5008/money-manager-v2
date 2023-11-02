@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,25 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model accountCategory {
-  id              Int          @id @default(autoincrement())
-  category        String
-  account         account[]
-}
-
 model account {
-  id               Int           @id @default(autoincrement())
-  name              String
-  accountCategoryId Int
-  accountCategory   accountCategory      @relation(fields: [accountCategoryId], references: [id], onDelete: Cascade)
-  openingBalance   Decimal
-  balance          Decimal
-  income           income[]
-  expense          expense[]
-  transfersFrom    transfer[]    @relation("fromAccount")
-  transfersTo      transfer[]    @relation("toAccount")
-  debtPaymentsFrom debtPayment[] @relation("dpFromAccount")
-  debtPaymentsTo   debtPayment[] @relation("dpToAccount")
+  id                                             Int             @id @default(autoincrement())
+  name                                           String
+  accountCategoryId                              Int
+  openingBalance                                 Decimal
+  balance                                        Decimal
+  accountCategory                                accountcategory @relation(fields: [accountCategoryId], references: [id], onDelete: Cascade)
+  debtpayment_debtpayment_accountFromIdToaccount debtpayment[]   @relation("debtpayment_accountFromIdToaccount")
+  debtpayment_debtpayment_accountToIdToaccount   debtpayment[]   @relation("debtpayment_accountToIdToaccount")
+  expense                                        expense[]
+  income                                         income[]
+  transfersFrom                                  transfer[]      @relation("fromAccount")
+  transfersTo                                    transfer[]      @relation("toAccount")
+
+  @@index([accountCategoryId], map: "account_accountCategoryId_fkey")
 }
 
 model year {
@@ -41,60 +34,63 @@ model month {
   id     Int    @id @default(autoincrement())
   month  Int
   yearId Int
-  year   year   @relation(fields: [yearId], references: [id], onDelete: Cascade)
   dates  date[]
+  year   year   @relation(fields: [yearId], references: [id], onDelete: Cascade)
+
+  @@index([yearId], map: "month_yearId_fkey")
 }
 
 model date {
-  id           Int           @id @default(autoincrement())
-  date         Int
-  day          String
-  monthId      Int
-  month        month         @relation(fields: [monthId], references: [id], onDelete: Cascade)
-  income       income[]
-  expenses     expense[]
-  transfers    transfer[]
-  debtPayments debtPayment[]
+  id          Int           @id @default(autoincrement())
+  date        Int
+  day         String
+  monthId     Int
+  month       month         @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  debtpayment debtpayment[]
+  expenses    expense[]
+  income      income[]
+  transfers   transfer[]
+
+  @@index([monthId], map: "date_monthId_fkey")
 }
 
 model category {
-  id          Int         @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
   type        String
-  subCategories   subCategory[]
-}
-
-model subCategory {
-  id          Int         @id @default(autoincrement())
-  name        String
-  categoryId    Int
-  category      category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  income        income[]
-  expenses      expense[]
+  subcategory subcategory[]
 }
 
 model income {
-  id          Int     @id @default(autoincrement())
-  amount      Decimal
-  accountId   Int
-  subCategoryId   Int
-  subCategory   subCategory  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
-  isRecurring Boolean
-  dateId      Int
-  date        date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
-  account     account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  id            Int         @id @default(autoincrement())
+  amount        Decimal
+  accountId     Int
+  subCategoryId Int
+  isRecurring   Boolean
+  dateId        Int
+  account       account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  date          date        @relation(fields: [dateId], references: [id], onDelete: Cascade)
+  subCategory   subcategory @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+
+  @@index([accountId], map: "income_accountId_fkey")
+  @@index([dateId], map: "income_dateId_fkey")
+  @@index([subCategoryId], map: "income_subCategoryId_fkey")
 }
 
 model expense {
-  id          Int     @id @default(autoincrement())
-  amount      Decimal
-  accountId   Int
-  subCategoryId   Int
-  subCategory   subCategory  @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
-  isRecurring Boolean
-  dateId      Int
-  date        date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
-  account     account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  id            Int         @id @default(autoincrement())
+  amount        Decimal
+  accountId     Int
+  subCategoryId Int
+  isRecurring   Boolean
+  dateId        Int
+  account       account     @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  date          date        @relation(fields: [dateId], references: [id], onDelete: Cascade)
+  subCategory   subcategory @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+
+  @@index([accountId], map: "expense_accountId_fkey")
+  @@index([dateId], map: "expense_dateId_fkey")
+  @@index([subCategoryId], map: "expense_subCategoryId_fkey")
 }
 
 model transfer {
@@ -104,19 +100,44 @@ model transfer {
   accountToId   Int
   isRecurring   Boolean
   dateId        Int
-  date          date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
   accountFrom   account @relation("fromAccount", fields: [accountFromId], references: [id], onDelete: Cascade)
   accountTo     account @relation("toAccount", fields: [accountToId], references: [id], onDelete: Cascade)
+  date          date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
+
+  @@index([accountFromId], map: "transfer_accountFromId_fkey")
+  @@index([accountToId], map: "transfer_accountToId_fkey")
+  @@index([dateId], map: "transfer_dateId_fkey")
 }
 
-model debtPayment {
-  id            Int     @id @default(autoincrement())
-  amount        Decimal
-  accountFromId Int
-  accountToId   Int
-  isRecurring   Boolean
-  dateId        Int
-  date          date    @relation(fields: [dateId], references: [id], onDelete: Cascade)
-  accountFrom   account @relation("dpFromAccount", fields: [accountFromId], references: [id], onDelete: Cascade)
-  accountTo     account @relation("dpToAccount", fields: [accountToId], references: [id], onDelete: Cascade)
+model accountcategory {
+  id       Int       @id @default(autoincrement())
+  category String
+  account  account[]
+}
+
+model debtpayment {
+  id                                         Int     @id @default(autoincrement())
+  amount                                     Decimal
+  accountFromId                              Int
+  accountToId                                Int
+  isRecurring                                Boolean
+  dateId                                     Int
+  account_debtpayment_accountFromIdToaccount account @relation("debtpayment_accountFromIdToaccount", fields: [accountFromId], references: [id], onDelete: Cascade, map: "debtPayment_accountFromId_fkey")
+  account_debtpayment_accountToIdToaccount   account @relation("debtpayment_accountToIdToaccount", fields: [accountToId], references: [id], onDelete: Cascade, map: "debtPayment_accountToId_fkey")
+  date                                       date    @relation(fields: [dateId], references: [id], onDelete: Cascade, map: "debtPayment_dateId_fkey")
+
+  @@index([accountFromId], map: "debtPayment_accountFromId_fkey")
+  @@index([accountToId], map: "debtPayment_accountToId_fkey")
+  @@index([dateId], map: "debtPayment_dateId_fkey")
+}
+
+model subcategory {
+  id         Int       @id @default(autoincrement())
+  name       String
+  categoryId Int
+  expenses   expense[]
+  income     income[]
+  category   category  @relation(fields: [categoryId], references: [id], onDelete: Cascade, map: "subCategory_categoryId_fkey")
+
+  @@index([categoryId], map: "subCategory_categoryId_fkey")
 }

@@ -64,7 +64,7 @@ export default function AddItem({
    }, [activeDate])
 
    async function loadCategories() {
-      await fetch("../../api/get-categories")
+      await fetch("../../api/get-categories/" + itemType)
          .then((res) => res.json())
          .then((res) => {
             const cats = []

@@ -148,7 +148,7 @@ function generateMonthDates(month, year) {
                transfers: {
                   create: []
                },
-               debtPayments: {
+               debtpayment: {
                   create: []
                }
             }
