@@ -10,13 +10,16 @@ export async function GET(request, { params }) {
         select: { id: true }
     })
 
+
     const { id: categoryId } = catId
-    const subCategories = await prisma.subCategory.findMany({
+    const subCategories = await prisma.subcategory.findMany({
         where: { categoryId },
         select: { name: true }
     })
+
     const subCats = subCategories.map(category => {
         return category.name
     })
+
     return NextResponse.json({ subCats })
 }
