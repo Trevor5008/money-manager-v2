@@ -170,7 +170,6 @@ export default function AddItem({
 
    async function postItem(evt) {
       evt.preventDefault()
-
       const dateStrArr = dateString.split("-")
       const year = dateStrArr[0]
       const month = dateStrArr[1]

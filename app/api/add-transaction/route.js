@@ -50,7 +50,7 @@ async function getAccountId(name) {
 
 // Helper method to retrieve subcategory id
 async function getSubCategoryId(subCat) {
-   const { id } = await prisma.subCategory.findFirst({
+   const { id } = await prisma.subcategory.findFirst({
       where: { name: subCat },
       select: { id: true }
    })
@@ -61,8 +61,8 @@ async function addAmount(amount, accountId) {
    await prisma.account.update({
       where: { id: accountId },
       data: {
-         increment: {
-            amount: amount
+         balance: {
+            increment: amount
          }
       }
    })
@@ -72,8 +72,8 @@ async function deductAmount(amount, accountId) {
    await prisma.account.update({
       where: { id: accountId },
       data: {
-         decrement: {
-            amount: amount
+         balance: {
+            decrement: amount
          }
       }
    })
