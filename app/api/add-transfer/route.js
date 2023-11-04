@@ -53,6 +53,29 @@ async function getAccountId(account) {
    return id
 }
 
+// Transfer out
+async function deductAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         balance: {
+            decrement: amount
+         }
+      }
+   })
+}
+// Transfer in
+async function addAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         balance: {
+            increment: amount
+         }
+      }
+   })
+}
+
 // TODO: Fix mapping of required fields
 export async function POST(request) {
    const payload = await request.json()
@@ -82,11 +105,15 @@ export async function POST(request) {
       case 'transfer':
          data.accountFromId = accountFromId
          data.accountToId = accountToId
+         await deductAmount(amount, accountFromId)
+         await addAmount(amount, accountToId)
          await prisma.transfer.create({ data })
          break
       case 'debt-payment':
          data.accountFromId = accountFromId
          data.accountToId = accountToId
+         await deductAmount(amount, accountFromId)
+         await addAmount(amount, accountToId)
          await prisma.debtPayment.create({ data })
          break
       default:
