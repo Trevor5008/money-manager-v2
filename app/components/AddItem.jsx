@@ -61,7 +61,7 @@ export default function AddItem({
    useEffect(() => {
       setActiveDate()
       loadCategories()
-   }, [activeDate])
+   }, [activeDate, itemType])
 
    async function loadCategories() {
       await fetch("../../api/get-categories/" + itemType)
@@ -90,10 +90,12 @@ export default function AddItem({
    }
 
    // Expense/Income/Transfer
-   function handleTypeChange(evt) {
+   async function handleTypeChange(evt) {
       const type = evt.target.value
+      clearItemFlds()
       setItemType(type)
       if (type === 'expense' || type === 'income') {
+         await loadCategories()
          setIsTransfer(false)
       } else {
          setIsTransfer(true)
