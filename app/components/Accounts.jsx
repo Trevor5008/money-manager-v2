@@ -1,3 +1,5 @@
+"use client"
+import { useState, useEffect } from "react"
 import {
    Stack,
    Divider,
@@ -6,6 +8,16 @@ import {
 } from "@mui/material"
 
 export default function Accounts() {
+   const [accountsData, setAccountsData] =
+      useState([])
+
+   useEffect(() => {
+      fetch("api/get-account-data")
+         .then((data) => data.json())
+         .then((data) =>
+            setAccountsData(data.accountData)
+         )
+   }, [])
    return (
       <Stack
          id="accounts"
@@ -44,9 +56,19 @@ export default function Accounts() {
                   marginTop={2}
                   marginLeft={2}
                >
-                  <Typography variant="p">
-                     Wells Fargo Checking
-                  </Typography>
+                  {accountsData &&
+                     accountsData.map((acct) => {
+                        return (
+                           <Box display="flex" justifyContent='space-between'>
+                              <Typography variant="p">
+                                 {acct.name}
+                              </Typography>
+                              <Typography variant="p">
+                                 {acct.balance}
+                              </Typography>
+                           </Box>
+                        )
+                     })}
                </Stack>
             </Stack>
             <Stack
