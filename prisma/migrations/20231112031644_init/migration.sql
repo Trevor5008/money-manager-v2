@@ -3,8 +3,8 @@ CREATE TABLE `account` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `accountCategoryId` INTEGER NOT NULL,
-    `openingBalance` DECIMAL(65, 30) NOT NULL,
-    `balance` DECIMAL(65, 30) NOT NULL,
+    `openingBalance` DECIMAL(9, 2) NOT NULL,
+    `balance` DECIMAL(9, 2) NOT NULL,
 
     INDEX `account_accountCategoryId_fkey`(`accountCategoryId`),
     PRIMARY KEY (`id`)
@@ -51,7 +51,7 @@ CREATE TABLE `category` (
 -- CreateTable
 CREATE TABLE `income` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `amount` DECIMAL(65, 30) NOT NULL,
+    `amount` DECIMAL(9, 2) NOT NULL,
     `accountId` INTEGER NOT NULL,
     `subCategoryId` INTEGER NOT NULL,
     `isRecurring` BOOLEAN NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE `income` (
 -- CreateTable
 CREATE TABLE `expense` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `amount` DECIMAL(65, 30) NOT NULL,
+    `amount` DECIMAL(9, 2) NOT NULL,
     `accountId` INTEGER NOT NULL,
     `subCategoryId` INTEGER NOT NULL,
     `isRecurring` BOOLEAN NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE `expense` (
 -- CreateTable
 CREATE TABLE `transfer` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `amount` DECIMAL(65, 30) NOT NULL,
+    `amount` DECIMAL(9, 2) NOT NULL,
     `accountFromId` INTEGER NOT NULL,
     `accountToId` INTEGER NOT NULL,
     `isRecurring` BOOLEAN NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE `accountcategory` (
 -- CreateTable
 CREATE TABLE `debtpayment` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `amount` DECIMAL(65, 30) NOT NULL,
+    `amount` DECIMAL(9, 2) NOT NULL,
     `accountFromId` INTEGER NOT NULL,
     `accountToId` INTEGER NOT NULL,
     `isRecurring` BOOLEAN NOT NULL,

@@ -11,8 +11,8 @@ model account {
   id                                             Int             @id @default(autoincrement())
   name                                           String
   accountCategoryId                              Int
-  openingBalance                                 Decimal
-  balance                                        Decimal
+  openingBalance                                 Decimal        @db.Decimal(9,2)
+  balance                                        Decimal        @db.Decimal(9,2)
   accountCategory                                accountcategory @relation(fields: [accountCategoryId], references: [id], onDelete: Cascade)
   debtpayment_debtpayment_accountFromIdToaccount debtpayment[]   @relation("debtpayment_accountFromIdToaccount")
   debtpayment_debtpayment_accountToIdToaccount   debtpayment[]   @relation("debtpayment_accountToIdToaccount")
@@ -63,7 +63,7 @@ model category {
 
 model income {
   id            Int         @id @default(autoincrement())
-  amount        Decimal
+  amount        Decimal     @db.Decimal(9,2)
   accountId     Int
   subCategoryId Int
   isRecurring   Boolean
@@ -79,7 +79,7 @@ model income {
 
 model expense {
   id            Int         @id @default(autoincrement())
-  amount        Decimal
+  amount        Decimal     @db.Decimal(9,2)
   accountId     Int
   subCategoryId Int
   isRecurring   Boolean
@@ -95,7 +95,7 @@ model expense {
 
 model transfer {
   id            Int     @id @default(autoincrement())
-  amount        Decimal
+  amount        Decimal @db.Decimal(9,2)
   accountFromId Int
   accountToId   Int
   isRecurring   Boolean
@@ -117,7 +117,7 @@ model accountcategory {
 
 model debtpayment {
   id                                         Int     @id @default(autoincrement())
-  amount                                     Decimal
+  amount                                     Decimal  @db.Decimal(9,2)
   accountFromId                              Int
   accountToId                                Int
   isRecurring                                Boolean
