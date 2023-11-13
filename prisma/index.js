@@ -12,7 +12,7 @@ async function main() {
     for (let year = startYear; year < endYear; year++) {
         const monthsData = [];
 
-        for (let month = 1; month <= 12; month++) {
+        for (let month = 0; month < 12; month++) {
             monthsData.push({
                 month,
                 dates: {

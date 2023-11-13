@@ -51,19 +51,19 @@ function parseSuffix(date) {
 }
 
 function getNumDays(month, year) {
-   const nextMonth = month < 12 ? month + 1 : 1
+   const nextMonth = month < 11 ? month + 1 : 0
    const currentYear =
-      month <= 12 ? year : year - 1
+      nextMonth > 0 ? year : year + 1
    const daysInMonth = new Date(
       currentYear,
-      nextMonth - 1,
+      nextMonth,
       0
    ).getDate()
    return daysInMonth
 }
 
 function getNumWeeks(month, year) {
-   const numDays = getNumDays(month - 1, year)
+   const numDays = getNumDays(month, year)
    const numWeeks = Math.ceil(numDays / 7)
    return numWeeks
 }
@@ -71,7 +71,7 @@ function getNumWeeks(month, year) {
 function findFirstDay(month, year) {
    const firstDayIdx = new Date(
       year,
-      month - 1,
+      month,
       1
    ).getDay()
    return firstDayIdx
@@ -115,7 +115,7 @@ function convertDate(dateStr, dates) {
    return dateObj
 }
 
-// Generates seed data for database
+// Generates seed data for database, used in index.js
 function generateMonthDates(month, year) {
    const firstIdx = findFirstDay(month, year) // 0 = "Sunday"
    const numWeeks = getNumWeeks(month, year)
@@ -133,7 +133,7 @@ function generateMonthDates(month, year) {
             // Creates date string
             const date = new Date(
                year,
-               month - 1,
+               month,
                dayCounter
             )
             const dateObj = {
