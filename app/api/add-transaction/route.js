@@ -62,7 +62,7 @@ async function addAmount(amount, accountId) {
       where: { id: accountId },
       data: {
          balance: {
-            increment: amount
+            increment: amount.toFixed(2)
          }
       }
    })
@@ -73,7 +73,7 @@ async function deductAmount(amount, accountId) {
       where: { id: accountId },
       data: {
          balance: {
-            decrement: amount
+            decrement: amount.toFixed(2)
          }
       }
    })
@@ -99,7 +99,7 @@ export async function POST(request) {
    const subCategoryId = await getSubCategoryId(subCategory)
 
    const data = {
-      amount,
+      amount: amount.toFixed(2),
       isRecurring,
       dateId, 
       subCategoryId,

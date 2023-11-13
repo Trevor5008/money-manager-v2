@@ -160,11 +160,11 @@ export default function AddItem({
 
    // Transfer Handlers
 
-   function handleAmountChange(evt) {
-      const inputValue = parseFloat(
-         evt.target.value
-      )
-      setItemAmount(inputValue)
+   function handleAmountChange(evt) { 
+      let inputValue = evt.target.value
+      const decimalPlaces = (inputValue.split('.')[1] || []).length
+      console.log(decimalPlaces)
+      decimalPlaces <= 2 ? setItemAmount(inputValue) : setItemAmount('')
    }
 
    function clearItemFlds() {
