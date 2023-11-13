@@ -61,10 +61,12 @@ export default function AddItem({
    useEffect(() => {
       setActiveDate()
       loadCategories()
-   }, [activeDate])
+   }, [activeDate, itemType])
 
    async function loadCategories() {
-      await fetch("../../api/get-categories")
+      await fetch(
+         "../../api/get-categories/" + itemType
+      )
          .then((res) => res.json())
          .then((res) => {
             const cats = []
@@ -90,8 +92,19 @@ export default function AddItem({
    }
 
    // Expense/Income/Transfer
-   function handleTypeChange(evt) {
-      setItemType(evt.target.value)
+   async function handleTypeChange(evt) {
+      const type = evt.target.value
+      clearItemFlds()
+      setItemType(type)
+      if (
+         type === "expense" ||
+         type === "income"
+      ) {
+         await loadCategories()
+         setIsTransfer(false)
+      } else {
+         setIsTransfer(true)
+      }
    }
 
    function changeDate(evt) {
@@ -141,76 +154,75 @@ export default function AddItem({
       )
          .then((res) => res.json())
          .then((res) => {
-            console.log(res.subCats)
             setSubCategories(res.subCats)
          })
    }
 
    // Transfer Handlers
 
-   function handleAmountChange(evt) {
-      const inputValue = parseFloat(
-         evt.target.value
-      )
-      setItemAmount(inputValue)
+   function handleAmountChange(evt) { 
+      let inputValue = evt.target.value
+      const decimalPlaces = (inputValue.split('.')[1] || []).length
+      console.log(decimalPlaces)
+      decimalPlaces <= 2 ? setItemAmount(inputValue) : setItemAmount('')
    }
 
    function clearItemFlds() {
       setIsRecurring(false)
       setAccount("")
       setCategory("")
+      setSubCategory("")
       setItemAmount("")
       setActiveDate()
    }
 
    async function postItem(evt) {
       evt.preventDefault()
-
       const dateStrArr = dateString.split("-")
       const year = dateStrArr[0]
       const month = dateStrArr[1]
       const date = dateStrArr[2]
 
       if (!isTransfer) {
-      const itemObj = {
-         month: parseInt(month),
-         year: parseInt(year),
-         date: parseInt(date),
-         isRecurring,
-         itemType,
-         amount: itemAmount,
-         account,
-         subCategory
+         const itemObj = {
+            month: parseInt(month),
+            year: parseInt(year),
+            date: parseInt(date),
+            isRecurring,
+            itemType,
+            amount: itemAmount,
+            account,
+            subCategory
+         }
+         await fetch(`../api/add-transaction`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ itemObj })
+         })
+         .then(() => clearItemFlds())
+      } else {
+         // Transfer/Debt Payment
+         const transferObj = {
+            month: parseInt(month),
+            year: parseInt(year),
+            date: parseInt(date),
+            isRecurring,
+            accountFrom,
+            accountTo,
+            amount: itemAmount,
+            itemType
+         }
+         await fetch(`../api/add-transfer`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ transferObj })
+         })
+         .then(() => clearItemFlds())
       }
-      await fetch(`../api/add-transaction`, {
-         method: "POST",
-         headers: {
-            "Content-Type": "application/json"
-         },
-         body: JSON.stringify({ itemObj })
-      })
-   } else {
-
-       const transferObj = {
-         month: parseInt(month),
-         year: parseInt(year),
-         date: parseInt(date),
-         isRecurring,
-         accountFrom,
-         accountTo,
-         amount: itemAmount,
-         itemType
-       } 
-       await fetch(`../api/add-transfer`, {
-         method: "POST",
-         headers: {
-            "Content-Type": "application/json"
-         },
-         body: JSON.stringify({ transferObj })
-      })
-
-      }
-      
    }
 
    return (
@@ -302,13 +314,17 @@ export default function AddItem({
                isRecurring={isRecurring}
                handleRecurrence={handleRecurrence}
                itemAmount={itemAmount}
-               handleAmountChange={handleAmountChange}
+               handleAmountChange={
+                  handleAmountChange
+               }
                account={account}
                accountSelect={accountSelect}
                category={category}
                categorySelect={categorySelect}
                subCategory={subCategory}
-               subCategorySelect={subCategorySelect}
+               subCategorySelect={
+                  subCategorySelect
+               }
                categories={categories}
                subCategories={subCategories}
                itemType={itemType}
@@ -318,14 +334,20 @@ export default function AddItem({
                postItem={postItem}
                dateString={dateString}
                changeDate={changeDate}
-               changePeriodicity={changePeriodicity}
+               changePeriodicity={
+                  changePeriodicity
+               }
                isRecurring={isRecurring}
                handleRecurrence={handleRecurrence}
                itemAmount={itemAmount}
-               handleAmountChange={handleAmountChange}
+               handleAmountChange={
+                  handleAmountChange
+               }
                accountFrom={accountFrom}
                accountTo={accountTo}
-               accountFromSelect={accountFromSelect}
+               accountFromSelect={
+                  accountFromSelect
+               }
                accountToSelect={accountToSelect}
                itemType={itemType}
             />

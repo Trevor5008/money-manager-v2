@@ -181,6 +181,7 @@ export default function ItemForm({
                      flex: 1
                   }}
                >
+                  {/* Accounts Dropdownn */}
                   <Select
                      labelId="demo-simple-select-label"
                      id="demo-simple-select"
@@ -195,22 +196,22 @@ export default function ItemForm({
                      <ListSubheader>
                         Payment Accounts
                      </ListSubheader>
-                     <MenuItem value="wells-fargo-checking">
+                     <MenuItem value="wells fargo">
                         Wells Fargo Checking
                      </MenuItem>
-                     <MenuItem value="pnc-wallet">
+                     <MenuItem value="pnc wallet">
                         PNC Wallet
                      </MenuItem>
                      <ListSubheader>
                         Credit Cards
                      </ListSubheader>
-                     <MenuItem value="chase-amazon">
+                     <MenuItem value="chase amazon">
                         Chase Amazon
                      </MenuItem>
-                     <MenuItem value="chase-freedom">
+                     <MenuItem value="chase freedom">
                         Chase Freedom
                      </MenuItem>
-                     <MenuItem value="pnc-core">
+                     <MenuItem value="pnc core">
                         PNC Core
                      </MenuItem>
                   </Select>
@@ -297,7 +298,7 @@ export default function ItemForm({
                            console.log(category)
                            return (
                               <MenuItem
-                                 value={category.toLowerCase()}
+                                 value={category}
                               >
                                  {category}
                               </MenuItem>

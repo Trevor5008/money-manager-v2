@@ -7,7 +7,6 @@ import Calendar from "./components/Calendar"
 import Transactions from "./components/Transactions"
 import CustomTabPanel from "./components/CustomTabPanel"
 import Accounts from "./components/Accounts"
-import AddItem from "./components/AddItem"
 import { Box, Paper, Stack } from "@mui/material"
 
 // TODO: Fix formatting of date objects,

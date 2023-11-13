@@ -12,11 +12,11 @@ async function main() {
     for (let year = startYear; year < endYear; year++) {
         const monthsData = [];
 
-        for (let month = 0; month < 12; month++) {
+        for (let month = 1; month <= 12; month++) {
             monthsData.push({
                 month,
                 dates: {
-                    create: generateMonthDates(month, year, today),
+                    create: generateMonthDates(month, year),
                 },
             });
         }
@@ -30,23 +30,6 @@ async function main() {
             },
         });
     }
-    await prisma.expense.create({
-        data: {
-            amount: 1.23,
-        category: "Fuel",
-        isRecurring: false,
-        date: {
-            connect: {
-                id: 1
-            }
-        },
-        account: {
-            connect: {
-                id: 1
-            }
-        }
-        }
-    })
 }
 
 

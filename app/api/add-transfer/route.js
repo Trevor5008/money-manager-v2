@@ -25,6 +25,7 @@ async function getDateId(year, month, date) {
          }
       }
    )
+   
    // Retrieve date id  
    const { id } = await prisma.date.findFirst({
       where: {
@@ -39,12 +40,48 @@ async function getDateId(year, month, date) {
    return id
 }
 
+async function getAccountId(account) {
+   const { id } = await prisma.account.findFirst({
+      where: {
+         name: account
+      },
+      select: {
+         id: true
+      }
+   })
+
+   return id
+}
+
+// Transfer out
+async function deductAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         balance: {
+            decrement: amount.toFixed(2)
+         }
+      }
+   })
+}
+// Transfer in
+async function addAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         balance: {
+            increment: amount.toFixed(2)
+         }
+      }
+   })
+}
+
 // TODO: Fix mapping of required fields
 export async function POST(request) {
    const payload = await request.json()
    const {
       year,
-      month,
+      month,   
       date,
       itemType,
       isRecurring,
@@ -55,21 +92,28 @@ export async function POST(request) {
 
    const dateId = await getDateId(year, month, date);
 
+   const accountFromId = await getAccountId(accountFrom)
+   const accountToId = await getAccountId(accountTo)
+
    const data = {
-      amount,
+      amount: amount.toFixed(2),
       isRecurring,
       dateId
    } 
 
    switch(itemType) {
       case 'transfer':
-         data.accountFromId = 1
-         data.accountToId = 2
+         data.accountFromId = accountFromId
+         data.accountToId = accountToId
+         await deductAmount(amount, accountFromId)
+         await addAmount(amount, accountToId)
          await prisma.transfer.create({ data })
          break
       case 'debt-payment':
-         data.accountFromId = 1
-         data.accountToId = 2
+         data.accountFromId = accountFromId
+         data.accountToId = accountToId
+         await deductAmount(amount, accountFromId)
+         await addAmount(amount, accountToId)
          await prisma.debtPayment.create({ data })
          break
       default:

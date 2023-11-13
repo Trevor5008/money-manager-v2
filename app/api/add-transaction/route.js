@@ -39,6 +39,47 @@ async function getDateId(year, month, date) {
    return id
 }
 
+// Helper method to retrieve account id
+async function getAccountId(name) {
+   const { id } = await prisma.account.findFirst({
+      where: { name },
+      select: { id: true }
+   })
+   return id
+}
+
+// Helper method to retrieve subcategory id
+async function getSubCategoryId(subCat) {
+   const { id } = await prisma.subcategory.findFirst({
+      where: { name: subCat },
+      select: { id: true }
+   })
+   return id
+}
+// Income adjustment
+async function addAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         balance: {
+            increment: amount.toFixed(2)
+         }
+      }
+   })
+}
+// Expense adjustment
+async function deductAmount(amount, accountId) {
+   await prisma.account.update({
+      where: { id: accountId },
+      data: {
+         balance: {
+            decrement: amount.toFixed(2)
+         }
+      }
+   })
+}
+
+
 // TODO: Fix mapping of required fields
 export async function POST(request) {
    const payload = await request.json()
@@ -48,32 +89,36 @@ export async function POST(request) {
       date,
       itemType,
       isRecurring,
-      amount
+      amount,
+      account,
+      subCategory
    } = payload.itemObj
 
    const dateId = await getDateId(year, month, date);
+   const accountId = await getAccountId(account);
+   const subCategoryId = await getSubCategoryId(subCategory)
 
    const data = {
-      amount,
+      amount: amount.toFixed(2),
       isRecurring,
-      dateId
+      dateId, 
+      subCategoryId,
+      accountId
    } 
+
 
    switch(itemType) {
       case 'expense':
-         data.accountId = 1
-         data.subCategory = subcCategory
+         await deductAmount(amount, accountId)
          await prisma.expense.create({ data })
          break
       case 'income':
-         data.accountId = 1
-         data.subCategory = subCategory
+         await addAmount(amount, accountId)
          await prisma.income.create({ data })
          break
       default:
          console.log('Unrecognized transaction type')
    }
-   // TODO: Based on date id... add transaction (correct type)
    
    // return NextResponse.json({dates})
 }
