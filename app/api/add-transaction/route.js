@@ -58,11 +58,12 @@ async function getSubCategoryId(subCat) {
 }
 // Income adjustment
 async function addAmount(amount, accountId) {
+   console.log(amount, accountId)
    await prisma.account.update({
       where: { id: accountId },
       data: {
          balance: {
-            increment: amount.toFixed(2)
+            increment: amount
          }
       }
    })
@@ -73,7 +74,7 @@ async function deductAmount(amount, accountId) {
       where: { id: accountId },
       data: {
          balance: {
-            decrement: amount.toFixed(2)
+            decrement: amount
          }
       }
    })
@@ -99,7 +100,7 @@ export async function POST(request) {
    const subCategoryId = await getSubCategoryId(subCategory)
 
    const data = {
-      amount: amount.toFixed(2),
+      amount: amount,
       isRecurring,
       dateId, 
       subCategoryId,
